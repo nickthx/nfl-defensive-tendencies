@@ -45,7 +45,7 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Bootstrap (BOOT-01..07): repo skeleton, pinned `requirements.txt`, `.gitignore`, `pyproject.toml` ruff config, `.python-version`, README skeleton, fresh-venv install verification
+- [x] 01-01-PLAN.md — Bootstrap (BOOT-01..07): repo skeleton, pinned `requirements.txt`, `.gitignore`, `pyproject.toml` ruff config, `.python-version`, README skeleton, fresh-venv install verification (completed 2026-04-29)
 - [ ] 01-02-PLAN.md — FTN Audit (AUDIT-01..07): `00_data_audit.ipynb`, null-profile CSV, schema-audit narrative, pre-registered analysis plan, lock repo name, rewrite SPEC business questions and README hook to post-pivot framing
 
 **In-phase parallelism:** 01-01 (Bootstrap) and 01-02 (Audit) are **serial** — the audit notebook needs the repo skeleton (`analysis/`, `audit/`, `docs/` directories from BOOT-01) and a working venv (BOOT-07) before it can run. Within 01-01, all artifact files (`requirements.txt`, `.gitignore`, `pyproject.toml`, `.python-version`, README skeleton) are independent and parallel-writable; install verification (BOOT-07) is the single serial gate at the end. Within 01-02, AUDIT-01 → AUDIT-02 → AUDIT-03 are serial (each depends on the previous artifact); AUDIT-04 (analysis plan), AUDIT-05 (repo name), AUDIT-06 (SPEC rewrite), AUDIT-07 (README hook) can run in parallel after AUDIT-03 lands.
@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4. Decimal phases inserted on
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & FTN Pivot Calibration | 0/TBD | Not started | - |
+| 1. Foundation & FTN Pivot Calibration | 1/2 | In progress | - |
 | 2. Data Layer (ETL + SQLite Schema) | 0/TBD | Not started | - |
 | 3. Analytical Layer (SQL + Python) | 0/TBD | Not started | - |
 | 4. Story & Ship (Viz + Docs + Public GitHub) | 0/TBD | Not started | - |

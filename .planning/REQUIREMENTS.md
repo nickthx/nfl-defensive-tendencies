@@ -11,13 +11,13 @@ REQ-IDs are grouped by architectural layer. Phase mapping is filled in by the ro
 
 ### Bootstrap (foundation discipline)
 
-- [ ] **BOOT-01**: Skeleton repo created with directory tree per `.planning/research/SUMMARY.md` (data/, etl/, schema/, queries/, analysis/, findings/, .planning/ committed)
-- [ ] **BOOT-02**: `requirements.txt` pins the Consolidated Stack: `nfl_data_py==0.3.3`, `pandas>=2.1,<2.3`, `numpy>=1.26,<2.0`, `pyarrow>=15,<22`, `scipy>=1.13,<1.18`, `matplotlib>=3.8,<3.11`, `seaborn==0.13.2`, `jupyterlab>=4.2,<4.6`, `ipykernel>=6.29,<8`, `jupytext>=1.16,<2`, `nbconvert>=7.16,<8`, `ruff>=0.6,<1.0`
-- [ ] **BOOT-03**: `.gitignore` excludes `data/raw/`, `*.db`, `.env*`, `__pycache__/`, `.ipynb_checkpoints/`, scratch files, `venv/`
-- [ ] **BOOT-04**: `pyproject.toml` houses `[tool.ruff]` config only (line-length=100, target=py311, select E/F/I/B/UP)
-- [ ] **BOOT-05**: `.python-version` pinned to `3.11`
-- [ ] **BOOT-06**: README skeleton with empty section headers (no claims yet)
-- [ ] **BOOT-07**: `requirements.txt` install verified clean on a fresh Python 3.11 venv
+- [x] **BOOT-01**: Skeleton repo created with directory tree per `.planning/research/SUMMARY.md` (data/, etl/, schema/, queries/, analysis/, findings/, .planning/ committed)
+- [x] **BOOT-02**: `requirements.txt` pins the Consolidated Stack: `nfl_data_py==0.3.3`, `pandas>=2.1,<2.3`, `numpy>=1.26,<2.0`, `pyarrow>=15,<22`, `scipy>=1.13,<1.18`, `matplotlib>=3.8,<3.11`, `seaborn==0.13.2`, `jupyterlab>=4.2,<4.6`, `ipykernel>=6.29,<8`, `jupytext>=1.16,<2`, `nbconvert>=7.16,<8`, `ruff>=0.6,<1.0`
+- [x] **BOOT-03**: `.gitignore` excludes `data/raw/`, `*.db`, `.env*`, `__pycache__/`, `.ipynb_checkpoints/`, scratch files, `venv/`
+- [x] **BOOT-04**: `pyproject.toml` houses `[tool.ruff]` config only (line-length=100, target=py311, select E/F/I/B/UP)
+- [x] **BOOT-05**: `.python-version` pinned to `3.11`
+- [x] **BOOT-06**: README skeleton with empty section headers (no claims yet)
+- [x] **BOOT-07**: `requirements.txt` install verified clean on a fresh Python 3.11 venv (with documented two-step install workaround for nfl_data_py upstream metadata mismatch)
 
 ### FTN Audit / Pivot Calibration
 
@@ -147,13 +147,13 @@ Populated by the roadmapper after `ROADMAP.md` is written. Each v1 requirement m
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BOOT-01 | Phase 1 | Pending |
-| BOOT-02 | Phase 1 | Pending |
-| BOOT-03 | Phase 1 | Pending |
-| BOOT-04 | Phase 1 | Pending |
-| BOOT-05 | Phase 1 | Pending |
-| BOOT-06 | Phase 1 | Pending |
-| BOOT-07 | Phase 1 | Pending |
+| BOOT-01 | Phase 1 | Complete |
+| BOOT-02 | Phase 1 | Complete |
+| BOOT-03 | Phase 1 | Complete |
+| BOOT-04 | Phase 1 | Complete |
+| BOOT-05 | Phase 1 | Complete |
+| BOOT-06 | Phase 1 | Complete |
+| BOOT-07 | Phase 1 | Complete |
 | AUDIT-01 | Phase 1 | Pending |
 | AUDIT-02 | Phase 1 | Pending |
 | AUDIT-03 | Phase 1 | Pending |
