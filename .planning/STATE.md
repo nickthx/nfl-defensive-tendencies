@@ -10,31 +10,31 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 1 of 4 (Foundation & FTN Pivot Calibration)
-Plan: 0 of 2 in current phase
-Status: Plans verified — ready for `/gsd-execute-phase 1`
-Last activity: 2026-04-29 — Phase 1 plans written (2 plans, 14/14 reqs covered, plan-checker passed iteration 2)
+Plan: 1 of 2 in current phase
+Status: Plan 01-01 (Bootstrap) complete — ready to execute Plan 01-02 (FTN Audit)
+Last activity: 2026-04-29 — Plan 01-01 executed (BOOT-01..07 complete; locked stack verified on fresh Python 3.11 venv)
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [█░░░░░░░░░] 13%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 0
-- Average duration: —
-- Total execution time: —
+- Total plans completed: 1
+- Average duration: 10m
+- Total execution time: 10m
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Foundation & FTN Pivot Calibration | 0 / 2 | — | — |
+| 1. Foundation & FTN Pivot Calibration | 1 / 2 | 10m | 10m |
 | 2. Data Layer (ETL + Schema) | 0 | — | — |
 | 3. Analytical Layer (SQL + Python) | 0 | — | — |
 | 4. Story & Ship | 0 | — | — |
 
 **Recent Trend:**
-- Last 5 plans: none yet
-- Trend: —
+- Last 5 plans: 01-01 Bootstrap (10m, 3 task commits, 2 deviations auto-fixed)
+- Trend: on-pace; in-phase parallelism deferred (this was the serial bootstrap)
 
 *Updated after each plan completion*
 
@@ -51,6 +51,8 @@ Recent decisions affecting current work:
 - `competitive_plays` SQL view is a Phase 2 SCHEMA deliverable (single source of truth for play-type and win-probability filtering across all analytical queries)
 - Predictability score normalization (`H/log(k)` over fixed support OR KL-from-baseline) MUST be the FIRST cell of `02_predictability_modeling.ipynb` (Phase 3)
 - Ship via GitHub MCP (Phase 4): repo creation, topic config, social preview, pinning all use GitHub MCP tools — not manual `git push`
+- **`nfl_data_py` two-step install pattern is the standard nflverse-community workaround** (Plan 01-01): upstream `0.3.3` metadata declares `pandas<2.0` which conflicts with our locked `pandas>=2.1,<2.3`. Install non-`nfl_data_py` deps first with strict resolver, then `nfl_data_py==0.3.3 --no-deps` (plus `appdirs>1`, `fastparquet>0.5`). Pin block stays as researched; install procedure adapts. Phase 4 / DOC-05 README setup block and SHIP-02 fresh-venv script MUST encode this.
+- **Windows Python 3.11 launcher dispatch** (Plan 01-01): system `python` resolves to 3.14 by default on Windows 11; use `py -3.11` for venv creation. Cross-platform docs should reference `python3.11` or `py -3.11` (Windows) explicitly.
 
 ### Pending Todos
 
@@ -77,5 +79,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-29
-Stopped at: Phase 1 plans verified (01-01 Bootstrap, 01-02 FTN Audit). All 14 reqs covered; plan-checker passed iteration 2 after a verify-clause revision pass.
-Resume file: .planning/phases/01-foundation-ftn-pivot-calibration/01-01-PLAN.md and 01-02-PLAN.md — ready for `/gsd-execute-phase 1`.
+Stopped at: Plan 01-01 (Bootstrap) executed cleanly — 3 task commits + SUMMARY (`36e1c5c` config files, `520cde0` directory tree + README skeleton, `496fac2` BOOT-07 verification). Locked stack verified on fresh Python 3.11.9 venv.
+Resume file: .planning/phases/01-foundation-ftn-pivot-calibration/01-02-PLAN.md — ready for Plan 01-02 (FTN Audit) execution.
