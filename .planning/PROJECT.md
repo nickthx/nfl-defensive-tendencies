@@ -1,8 +1,10 @@
-# NFL Defensive Coverage Tendencies
+# NFL Defensive Tendencies
 
 ## What This Is
 
-A public, portfolio-grade data analytics project that examines how NFL defenses deploy coverage (and broader scheme) tendencies situationally — using `nfl_data_py` FTN charting + nflfastR play-by-play for the 2022–2024 seasons. Audience: data-analyst recruiters and sports-analytics teams reviewing entry-level applicants. The deliverable is a public GitHub repo with a reproducible Python+SQLite ETL, ~8 SQL analyses, Jupyter notebooks, and an analyst-memo-style FINDINGS.md.
+A public, portfolio-grade data analytics project that examines how NFL defenses deploy scheme tendencies situationally — using `nfl-data-py==0.3.3` (FTN charting + nflfastR play-by-play) for the 2022–2024 seasons. Audience: data-analyst recruiters and sports-analytics teams reviewing entry-level applicants. The deliverable is a public GitHub repo with a reproducible Python+SQLite ETL, ~8 SQL analyses, Jupyter notebooks, and an analyst-memo-style FINDINGS.md.
+
+The original framing centered on coverage scheme labels (Cover 0/1/2/3/4/6, man/zone). Project research confirmed those labels are NOT in public FTN data — they are part of FTN's paid product. The project pivots to broader defensive tendencies (blitz rate, pass-rusher count, play-action response, screen rate, RPO usage, QB location, backfield personnel, hash starting position). Phase 1 picks the final 3–4 dimensions to anchor analysis.
 
 ## Core Value
 
@@ -18,64 +20,79 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 
 ### Active
 
-<!-- Hypotheses until shipped. Detailed REQ-IDs live in REQUIREMENTS.md. -->
+<!-- Hypotheses until shipped. Detailed REQ-IDs live in REQUIREMENTS.md after the requirements pass. -->
 
-- [ ] FTN schema audit confirms (or invalidates) coverage-label availability before any ETL design
-- [ ] Reproducible ETL pipeline pulls FTN + nflfastR via `nfl_data_py` and lands SQLite
-- [ ] Normalized SQLite schema joining FTN + nflfastR at the play level
-- [ ] 8–10 SQL analysis queries answering the situational tendency questions
-- [ ] Python notebooks with at least one statistical test (chi-square) and an entropy-based predictability score
-- [ ] FINDINGS.md memo with 5–7 insights and embedded static charts (PNGs)
-- [ ] README that conveys the project's value in under 90 seconds
-- [ ] Public GitHub repo created via the GitHub MCP at ship time
+- [ ] Phase 1 calibration: profile FTN NaN rates per defensive column for 2022–2024, pick 3–4 anchor dimensions, lock public repo name
+- [ ] Reproducible ETL pipeline pulls FTN + nflfastR via `nfl-data-py==0.3.3`, caches parquet, lands SQLite (gitignored)
+- [ ] Lightly-normalized SQLite schema joining FTN to nflfastR on `nflverse_game_id` + `nflverse_play_id`
+- [ ] 8–10 SQL analysis queries answering the situational tendency questions (window fns, CTEs, joins)
+- [ ] Python notebooks: chi-square test on at least one situation; normalized-entropy predictability score with KL-from-baseline alternative
+- [ ] FINDINGS.md memo with 5–7 insights, tiered sample-size disclosure (N≥30 / ≥100 / ≥15-with-flag), embedded static PNG charts
+- [ ] README that conveys the project's value in under 90 seconds, hand-written (no AI boilerplate), with a hero chart in the first scroll
+- [ ] Public GitHub repo created and configured (description, topics, pinned) via the GitHub MCP at ship time
+- [ ] `nbconvert` smoke-test verifies all notebooks run end-to-end on a fresh kernel
 
 ### Out of Scope
 
-- **Streamlit / web dashboard** — adds deployment overhead without improving recruiter signal for this analytical project; static notebook + memo conveys the same skills more cleanly.
-- **Big Data Bowl tracking data + Kaggle dependency** — replaced by FTN via `nfl_data_py`; eliminates manual download friction.
+- **Cover 0–6 / man-zone labels** — not in public FTN; the FTN paid product would be required and is not redistributable. Pivot path is the project.
+- **`nflreadpy` migration** — considered (maintained successor) and rejected for v1; documented as v2 candidate.
+- **Streamlit / web dashboard** — adds deployment overhead without improving recruiter signal for an analytical project.
+- **Big Data Bowl + Kaggle dependency** — replaced by `nfl_data_py`; eliminates manual download friction.
 - **Postgres / DuckDB / Docker / cloud DB** — SQLite is sufficient and zero-friction for a recruiter clone-and-run.
+- **Committing the `.db` file** — 200–400 MB exceeds GitHub's 100 MiB limit; recruiters regenerate via ETL.
 - **Play-call prediction model** — scope creep; tendency analysis is the ceiling for v1.
 - **Betting / wagering angle** — keep the tone analytical, not speculative.
 - **Real-time / in-season auto-updating** — static analysis on fixed seasons.
-- **PFF or other paid data** — not redistributable in a public portfolio repo.
+- **PFF / paid data** — not redistributable in a public portfolio repo.
 - **Video / film breakdown** — out of scope for a tabular-data project.
 
 ## Context
 
 **Author profile:** This is one of Nick's portfolio pieces aimed at entry-level data-analyst roles, distinct from his Whitflow lead-gen automation work. Audience is non-football, non-domain recruiters — README and FINDINGS.md must convey value without assuming NFL knowledge.
 
-**Data shape (assumed, to be verified):**
-- `nfl_data_py.import_ftn_data(years)` — FTN charting data, available for 2022+ seasons. Assumed to expose defensive coverage labels (Cover 0/1/2/3/4/6, man/zone) and additional defensive context (blitz, pass rushers, defenders in box). **Unverified — Phase 1 will audit the actual schema.**
-- `nfl_data_py.import_pbp_data(years)` — full play-by-play with EPA, situational context (down, distance, field position, score, time), and play outcomes. Joinable to FTN on `game_id` + `play_id`.
+**Data shape (verified by project research):**
+- `nfl_data_py.import_ftn_data(years)` returns a 28-column FTN charting frame for 2022+. Defensive context is limited to `n_blitzers`, `n_pass_rushers`, `is_play_action`, `is_screen_pass`, `is_rpo`, `qb_location`, `n_offense_backfield`, `starting_hash`. **No Cover 0–6, no man/zone, no defenders-in-box columns** in the public dataset.
+- `nfl_data_py.import_pbp_data(years)` returns the full nflfastR play-by-play (~47k plays/season) with EPA, win probability, situational context, and outcomes. Joinable to FTN on `nflverse_game_id` + `nflverse_play_id` (NOT `ftn_game_id` / `ftn_play_id`).
+- `nfl-data-py` itself was archived 2025-09-25; we pin `==0.3.3` and accept the risk for SPEC-literal compatibility.
 
-**Pivot path if Phase 1 audit fails:** If FTN does not expose Cover 0–6 labels, the project pivots to whatever broader defensive tendency dimensions FTN does support (blitz rate, pass-rusher count, defenders in box, pressure events). The repo name and findings narrative will be calibrated to that result. **Aborting is not the default** — the pivot path is preferred because the underlying skills demonstrated are unchanged.
+**Domain primer (for the FINDINGS.md / README audience):** A defensive tendency is the rate at which a defense plays a particular look in a specific situation. Even without coverage labels, observable tendency dimensions include: how often a defense brings a blitz (`n_blitzers > 4`), how many pass rushers it sends, how it responds to play-action, how often it allows screens / RPOs to gain leverage, and how it positions vs offensive personnel. Modern offenses exploit known defensive tendencies — analyzing those tendencies is real work done by NFL analytics departments.
 
-**Domain primer:** A defensive coverage describes how secondary players are aligned post-snap. Cover 0 (no deep safety, all-out blitz), Cover 1 (one deep safety, man underneath), Cover 2 (two deep safeties), Cover 3 (three deep zones), Cover 4 (four deep quarters), Cover 6 (split-field hybrid). Modern offenses exploit known coverage tendencies — analyzing those tendencies is real work done by NFL analytics departments.
+**Sample-size discipline (tiered):**
+- **N≥30** for tendency claims (e.g., "the Bills blitz 38% of the time on 3rd-and-long")
+- **N≥100** for "extreme" claims (e.g., ">75% one look")
+- **N≥15** allowed only with an explicit low-sample flag in narrative
 
-**Sample-size discipline:** With ~270 regular-season games × 32 teams across 3 seasons, team-situation cells get thin fast. Minimum N=15 plays for any tendency claim; smaller cells are flagged in both notebooks and FINDINGS.md.
+**Garbage-time / low-leverage filtering** is a project-wide view (`wp BETWEEN 0.05 AND 0.95`), not per-query. Multiple-comparisons discipline: pre-register 3–5 situations in `docs/analysis-plan.md` before scanning all 32 × all situations.
 
 ## Constraints
 
-- **Tech stack**: Python 3.11+, SQLite, pandas, matplotlib/seaborn, Jupyter, `nfl_data_py` — pinned in `requirements.txt` to insulate from `nfl_data_py` API drift.
-- **No external infra**: no Docker, no cloud DB, no managed services, no API keys. A recruiter clone-and-run on a stock laptop must succeed.
-- **Public-repo discipline**: nothing checked in that we'd be embarrassed for a recruiter to read — no PFF/paid data, no scratch files, no noisy commit history. Working name is `nfl-coverage-tendencies` but the **public GitHub repo name is locked only after the Phase 1 FTN audit** (it may become `nfl-defensive-tendencies` if the project pivots).
-- **Ship via GitHub MCP**: the public repo is created and populated through the connected GitHub MCP, not manual `git push origin`. Ship phase plans must use GitHub MCP tools.
-- **Reproducibility budget**: the recruiter "from clone to first chart" path must be ≤ 5 commands and complete on a stock laptop in ≤ 10 minutes (excluding initial `nfl_data_py` data download).
-- **Scope budget**: this is a portfolio piece, not an SaaS. Six core deliverables (README, ETL, schema, queries, notebooks, FINDINGS.md). Stretch goals stay stretch goals until core is shipped.
+- **Python**: 3.11 only (cap; `nfl-data-py==0.3.3` install fails on 3.13 per upstream issue #122)
+- **Locked tech stack**: `nfl-data-py==0.3.3`, `numpy<2.0` (forced by upstream `np.float_` reference), `pandas>=2.2,<2.4`, SQLite, Jupyter, matplotlib/seaborn, scipy. NO Streamlit, NO Postgres / DuckDB / Docker / cloud DB, NO `nflreadpy` for v1.
+- **Reproducibility budget**: clone → first chart in ≤ 5 commands, ≤ 10 minutes on a stock laptop (excluding initial `nfl_data_py` data pull).
+- **Public-repo discipline**: nothing checked in we'd be embarrassed for a recruiter to read — no scratch files, no AI-generated README boilerplate, no PFF/paid data. nflverse CC-BY-SA attribution required in README.
+- **`.db` is gitignored**: 200–400 MB > 100 MiB GitHub limit; recruiter regenerates via ETL.
+- **Ship via GitHub MCP**: the public repo is created and populated through the connected GitHub MCP. Ship phase plans must use GitHub MCP tools.
+- **Working folder name** is `nfl-coverage-tendencies` (kept for git history); **public repo name** is locked at the end of Phase 1 (likely `nfl-defensive-tendencies`).
+- **Scope budget**: portfolio piece, not SaaS. Six core deliverables (README, ETL, schema, queries, notebooks, FINDINGS.md). Stretch goals stay stretch goals until core is shipped.
 
 ## Key Decisions
 
 | Decision | Rationale | Outcome |
 |----------|-----------|---------|
-| FTN charting via `nfl_data_py` (not Big Data Bowl) | Eliminates Kaggle manual-download friction; FTN labels every play, not a subset | — Pending (validated by Phase 1 audit) |
+| Pin `nfl-data-py==0.3.3` (not `nflreadpy`) | SPEC-literal compatibility, faster ship, frozen scope; archived risk acceptable | — Pending |
+| Project pivots to broader defensive tendencies (no Cover 0–6) | Public FTN has no man/zone or coverage-shell labels; pivot preserves all the demonstrated skills | ✓ Locked (validated by 4 independent research agents) |
+| FTN charting via `nfl_data_py` (not Big Data Bowl / Kaggle) | Eliminates manual-download friction; FTN labels every play | — Pending |
 | SQLite (not Postgres / DuckDB) | Zero-setup, single file, ideal for clone-and-run portfolio piece | — Pending |
-| Jupyter + matplotlib/seaborn (not Streamlit dashboard) | A static analytical memo conveys the same skill signal without deployment overhead | — Pending |
+| Jupyter + matplotlib/seaborn (not Streamlit dashboard) | Static analytical memo conveys the same skill signal without deployment overhead | — Pending |
+| `.db` gitignored, recruiter regenerates via ETL | 200–400 MB exceeds GitHub 100 MiB limit; ETL is the demo anyway | — Pending |
 | Quality model profile for planning agents | Portfolio piece; depth of research and roadmap pays off | — Pending |
-| Coarse phase granularity, parallel execution | 3–5 broad phases keeps a solo project moving; parallelism shortens total clock time | — Pending |
-| Commit `.planning/` to git | Visible engineering process is itself a recruiter signal | — Pending |
-| Pivot (not abort) if FTN lacks Cover 0–6 labels | Skills demonstrated are scheme-agnostic; broader defensive tendencies still answer the same business questions | — Pending |
-| Public repo name decided after Phase 1 | Avoids re-naming if the FTN audit forces a pivot | — Pending |
-| Ship via GitHub MCP | The connected MCP enables repo creation, topic configuration, and pinning in one flow | — Pending |
+| Coarse phase granularity (3–5 phases), parallel execution | Keeps a solo project moving; parallelism shortens total clock time | — Pending |
+| Commit `.planning/` to git | Visible engineering process is a recruiter signal | — Pending |
+| Phase 1 = pivot calibration, not blank-slate FTN audit | Researchers have already confirmed the FTN public schema; Phase 1 measures NaN rates and picks dimensions | — Pending |
+| Public repo name decided at end of Phase 1 | Avoids re-naming after final dimension choice | — Pending |
+| Ship via GitHub MCP | Connected MCP enables repo creation, topic configuration, pinning in one flow | — Pending |
+| Tiered sample-size discipline (N≥15 / 30 / 100) | Single threshold loses analytical nuance; tiered system surfaces "extreme" claims with proper rigor | — Pending |
+| Normalized Shannon entropy (H/log(k)) for predictability score | Raw entropy isn't comparable across different support sizes; normalization is the rigorous default | — Pending |
 
 ## Evolution
 
@@ -95,4 +112,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-29 after initialization*
+*Last updated: 2026-04-29 after research phase + post-pivot reframe*
