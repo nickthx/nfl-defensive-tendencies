@@ -17,14 +17,21 @@ Thumbs.db
 .vscode/
 .idea/
 
-# Data — large raw pulls, keep out of git
+# Data — large raw pulls + SQLite DB are gitignored
+# (.db locked gitignored per Pitfall #14: 200–400 MB exceeds GitHub's 100 MiB hard limit;
+# recruiter regenerates via `python -m etl.run`)
 data/raw/
 data/*.db-journal
 data/*.parquet
-# Note: data/nfl_coverage.db tracked decision deferred to ship phase (size-dependent)
+*.db
 
 # Secrets (defensive, even though this project shouldn't have any)
-.env
-.env.local
+.env*
 *.key
 *.pem
+
+# Scratch / temp
+scratch/
+scratch*
+tmp_*
+*.log
