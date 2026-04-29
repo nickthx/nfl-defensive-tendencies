@@ -147,22 +147,79 @@ Populated by the roadmapper after `ROADMAP.md` is written. Each v1 requirement m
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BOOT-01 … BOOT-07 | TBD | Pending |
-| AUDIT-01 … AUDIT-07 | TBD | Pending |
-| ETL-01 … ETL-06 | TBD | Pending |
-| SCHEMA-01 … SCHEMA-03 | TBD | Pending |
-| QUERY-01 … QUERY-09 | TBD | Pending |
-| STAT-01 … STAT-08 | TBD | Pending |
-| VIZ-01 … VIZ-05 | TBD | Pending |
-| DOC-01 … DOC-08 | TBD | Pending |
-| SHIP-01 … SHIP-07 | TBD | Pending |
+| BOOT-01 | Phase 1 | Pending |
+| BOOT-02 | Phase 1 | Pending |
+| BOOT-03 | Phase 1 | Pending |
+| BOOT-04 | Phase 1 | Pending |
+| BOOT-05 | Phase 1 | Pending |
+| BOOT-06 | Phase 1 | Pending |
+| BOOT-07 | Phase 1 | Pending |
+| AUDIT-01 | Phase 1 | Pending |
+| AUDIT-02 | Phase 1 | Pending |
+| AUDIT-03 | Phase 1 | Pending |
+| AUDIT-04 | Phase 1 | Pending |
+| AUDIT-05 | Phase 1 | Pending |
+| AUDIT-06 | Phase 1 | Pending |
+| AUDIT-07 | Phase 1 | Pending |
+| ETL-01 | Phase 2 | Pending |
+| ETL-02 | Phase 2 | Pending |
+| ETL-03 | Phase 2 | Pending |
+| ETL-04 | Phase 2 | Pending |
+| ETL-05 | Phase 2 | Pending |
+| ETL-06 | Phase 2 | Pending |
+| SCHEMA-01 | Phase 2 | Pending |
+| SCHEMA-02 | Phase 2 | Pending |
+| SCHEMA-03 | Phase 2 | Pending |
+| QUERY-01 | Phase 3 | Pending |
+| QUERY-02 | Phase 3 | Pending |
+| QUERY-03 | Phase 3 | Pending |
+| QUERY-04 | Phase 3 | Pending |
+| QUERY-05 | Phase 3 | Pending |
+| QUERY-06 | Phase 3 | Pending |
+| QUERY-07 | Phase 3 | Pending |
+| QUERY-08 | Phase 3 | Pending |
+| QUERY-09 | Phase 3 | Pending |
+| STAT-01 | Phase 3 | Pending |
+| STAT-02 | Phase 3 | Pending |
+| STAT-03 | Phase 3 | Pending |
+| STAT-04 | Phase 3 | Pending |
+| STAT-05 | Phase 3 | Pending |
+| STAT-06 | Phase 3 | Pending |
+| STAT-07 | Phase 3 | Pending |
+| STAT-08 | Phase 3 | Pending |
+| VIZ-01 | Phase 4 | Pending |
+| VIZ-02 | Phase 4 | Pending |
+| VIZ-03 | Phase 4 | Pending |
+| VIZ-04 | Phase 4 | Pending |
+| VIZ-05 | Phase 4 | Pending |
+| DOC-01 | Phase 4 | Pending |
+| DOC-02 | Phase 4 | Pending |
+| DOC-03 | Phase 4 | Pending |
+| DOC-04 | Phase 4 | Pending |
+| DOC-05 | Phase 4 | Pending |
+| DOC-06 | Phase 4 | Pending |
+| DOC-07 | Phase 4 | Pending |
+| DOC-08 | Phase 4 | Pending |
+| SHIP-01 | Phase 4 | Pending |
+| SHIP-02 | Phase 4 | Pending |
+| SHIP-03 | Phase 4 | Pending |
+| SHIP-04 | Phase 4 | Pending |
+| SHIP-05 | Phase 4 | Pending |
+| SHIP-06 | Phase 4 | Pending |
+| SHIP-07 | Phase 4 | Pending |
 
 **Coverage:**
 - v1 requirements: 55 total
-- Mapped to phases: 0 (pending roadmap)
-- Unmapped: 55 ⚠️
+- Mapped to phases: 55 ✓
+- Unmapped: 0
+
+**Phase distribution:**
+- Phase 1 (Foundation & FTN Pivot Calibration): 14 requirements (BOOT-01..07, AUDIT-01..07)
+- Phase 2 (Data Layer): 9 requirements (ETL-01..06, SCHEMA-01..03)
+- Phase 3 (Analytical Layer): 17 requirements (QUERY-01..09, STAT-01..08)
+- Phase 4 (Story & Ship): 20 requirements (VIZ-01..05, DOC-01..08, SHIP-01..07)
 
 ---
 
 *Requirements defined: 2026-04-29*
-*Last updated: 2026-04-29 after research synthesis + post-pivot reframe*
+*Last updated: 2026-04-29 — Traceability table populated by roadmapper (4-phase coarse roadmap)*
