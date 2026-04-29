@@ -10,9 +10,9 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 ## Current Position
 
 Phase: 1 of 4 (Foundation & FTN Pivot Calibration)
-Plan: 0 of TBD in current phase
-Status: Context gathered — ready for `/gsd-plan-phase 1`
-Last activity: 2026-04-29 — Phase 1 CONTEXT.md written (anchor selection rule, 4 pre-registered situations, repo name locked)
+Plan: 0 of 2 in current phase
+Status: Plans verified — ready for `/gsd-execute-phase 1`
+Last activity: 2026-04-29 — Phase 1 plans written (2 plans, 14/14 reqs covered, plan-checker passed iteration 2)
 
 Progress: [░░░░░░░░░░] 0%
 
@@ -27,7 +27,7 @@ Progress: [░░░░░░░░░░] 0%
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 1. Foundation & FTN Pivot Calibration | 0 | — | — |
+| 1. Foundation & FTN Pivot Calibration | 0 / 2 | — | — |
 | 2. Data Layer (ETL + Schema) | 0 | — | — |
 | 3. Analytical Layer (SQL + Python) | 0 | — | — |
 | 4. Story & Ship | 0 | — | — |
@@ -77,5 +77,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-29
-Stopped at: Phase 1 context gathered (anchor selection rule + 4 pre-registered situations + repo name).
-Resume file: .planning/phases/01-foundation-ftn-pivot-calibration/01-CONTEXT.md — ready for `/gsd-plan-phase 1`.
+Stopped at: Phase 1 plans verified (01-01 Bootstrap, 01-02 FTN Audit). All 14 reqs covered; plan-checker passed iteration 2 after a verify-clause revision pass.
+Resume file: .planning/phases/01-foundation-ftn-pivot-calibration/01-01-PLAN.md and 01-02-PLAN.md — ready for `/gsd-execute-phase 1`.

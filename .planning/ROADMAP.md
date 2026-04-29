@@ -42,14 +42,13 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
   3. `docs/ftn-schema-audit.md` names the 3–4 chosen anchor defensive dimensions with a defensible, NaN-rate-aware rationale (AUDIT-03).
   4. `docs/analysis-plan.md` pre-registers 3–5 situations the FINDINGS.md memo will claim findings on (AUDIT-04).
   5. The public repo name is locked in writing and the README hook is rewritten in plain English to match the post-pivot framing (AUDIT-05, AUDIT-06, AUDIT-07).
-**Plans**: TBD (likely 2)
+**Plans:** 2 plans
 
 Plans:
-- [ ] 01-01: Bootstrap (BOOT-01..07) — repo skeleton, pinned `requirements.txt`, `.gitignore`, `pyproject.toml` ruff config, `.python-version`, README skeleton, fresh-venv install verification
-- [ ] 01-02: FTN Audit (AUDIT-01..07) — `00_data_audit.ipynb`, null-profile CSV, schema-audit narrative, pre-registered analysis plan, lock repo name, rewrite SPEC business questions and README hook to post-pivot framing
+- [ ] 01-01-PLAN.md — Bootstrap (BOOT-01..07): repo skeleton, pinned `requirements.txt`, `.gitignore`, `pyproject.toml` ruff config, `.python-version`, README skeleton, fresh-venv install verification
+- [ ] 01-02-PLAN.md — FTN Audit (AUDIT-01..07): `00_data_audit.ipynb`, null-profile CSV, schema-audit narrative, pre-registered analysis plan, lock repo name, rewrite SPEC business questions and README hook to post-pivot framing
 
 **In-phase parallelism:** 01-01 (Bootstrap) and 01-02 (Audit) are **serial** — the audit notebook needs the repo skeleton (`analysis/`, `audit/`, `docs/` directories from BOOT-01) and a working venv (BOOT-07) before it can run. Within 01-01, all artifact files (`requirements.txt`, `.gitignore`, `pyproject.toml`, `.python-version`, README skeleton) are independent and parallel-writable; install verification (BOOT-07) is the single serial gate at the end. Within 01-02, AUDIT-01 → AUDIT-02 → AUDIT-03 are serial (each depends on the previous artifact); AUDIT-04 (analysis plan), AUDIT-05 (repo name), AUDIT-06 (SPEC rewrite), AUDIT-07 (README hook) can run in parallel after AUDIT-03 lands.
-**Plans**: TBD
 **UI hint**: no
 
 ---
