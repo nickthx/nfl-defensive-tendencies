@@ -1,0 +1,35 @@
+{
+  "mode": "interactive",
+  "granularity": "coarse",
+  "parallelization": true,
+  "commit_docs": true,
+  "model_profile": "quality",
+  "workflow": {
+    "research": true,
+    "plan_check": true,
+    "verifier": true,
+    "nyquist_validation": false,
+    "auto_advance": false
+  },
+  "models": {
+    "researcher": "claude-opus-4-7",
+    "synthesizer": "claude-opus-4-7",
+    "roadmapper": "claude-opus-4-7",
+    "planner": "claude-opus-4-7",
+    "executor": "claude-sonnet-4-6",
+    "verifier": "claude-opus-4-7"
+  },
+  "ship": {
+    "platform": "github",
+    "via": "github-mcp",
+    "visibility": "public",
+    "repo_name": "tbd-after-phase-1",
+    "default_branch": "main"
+  },
+  "project": {
+    "working_name": "NFL Defensive Coverage Tendencies",
+    "audience": "entry-level-data-analyst-recruiters",
+    "data_sources": ["nfl_data_py.import_ftn_data", "nfl_data_py.import_pbp_data"],
+    "seasons": [2022, 2023, 2024]
+  }
+}

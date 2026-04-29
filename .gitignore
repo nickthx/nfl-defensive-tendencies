@@ -1,0 +1,30 @@
+# Python
+venv/
+.venv/
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Jupyter
+*.ipynb_checkpoints
+
+# OS / editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Data — large raw pulls, keep out of git
+data/raw/
+data/*.db-journal
+data/*.parquet
+# Note: data/nfl_coverage.db tracked decision deferred to ship phase (size-dependent)
+
+# Secrets (defensive, even though this project shouldn't have any)
+.env
+.env.local
+*.key
+*.pem
