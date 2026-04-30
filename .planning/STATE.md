@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & FTN Pivot Calibration) — COMPLETE & VERIFIED
-Plan: 2 of 2 in Phase 1 — COMPLETE; ready to plan Phase 2 (Plan 02-01 Schema, Plan 02-02 ETL)
-Status: Phase 1 complete — all 14 requirements (BOOT-01..07 + AUDIT-01..07) met; verifier returned `passed` against the post-cleanup state
-Last activity: 2026-04-29 — Phase 1 cleanup commit (182ff15) landed: voice cleanup, scope expansion 2022-2024 → 2022-2025 (D-10), SHIP-08 placeholder ship-guard filed, SPEC.md pandas pin aligned, ruff clean. Re-verification passed 14/14.
+Phase: 2 of 4 (Data Layer — ETL + SQLite Schema) — CONTEXT GATHERED
+Plan: 0 of 2 in Phase 2 — ready to run `/gsd-plan-phase 2` (will produce Plan 02-01 Schema + Plan 02-02 ETL)
+Status: Phase 2 context locked. 16 implementation decisions captured across 4 gray areas (competitive_plays predicates, plays whitelist + denormalization, ETL CLI + idempotency, runtime UX).
+Last activity: 2026-04-29 — Phase 2 discuss-phase complete. 02-CONTEXT.md + 02-DISCUSSION-LOG.md written. Headline locks: `competitive_plays` view predicate set finalized (include Q4 crunch time, drop end-of-half hurry-up only, play_type-only); plays whitelist locked at ~24 cols with season+week denormalized; REG+POST included with season_type on games; etl/run.py is zero-flag with year-by-year idempotent loaders; stdlib logging at INFO with timestamp+level; inline asserts for row counts and match-rate.
 
 Progress: [██░░░░░░░░] 25%
 
@@ -88,5 +88,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-29
-Stopped at: Phase 1 closed and re-verified after a single cleanup commit (`182ff15`) that applied voice cleanup to recruiter-facing prose, expanded scope to 2022-2025 (D-10), filed SHIP-08, aligned the SPEC pandas pin, and ran ruff --fix. The audit notebook re-ran end-to-end against the 4-season scope; the null-profile CSV was regenerated. The verifier returned `passed` (14/14 must-haves) against the post-cleanup state. **Phase 1 complete and verified.**
-Resume file: ready for Phase 2 planning (Plan 02-01 Schema and Plan 02-02 ETL); run `/gsd-plan-phase 2` to generate the plans.
+Stopped at: Phase 2 discuss-phase complete. 02-CONTEXT.md captures 16 implementation decisions across 4 gray areas (competitive_plays view predicate set; plays column whitelist + season/week denormalization; etl/run.py CLI ergonomics + idempotency; runtime UX — logging + assertions). 02-DISCUSSION-LOG.md records the alternatives considered. **Phase 2 context locked; no plans yet.**
+Resume file: `.planning/phases/02-data-layer-etl-sqlite-schema/02-CONTEXT.md`. Run `/gsd-plan-phase 2` to generate Plan 02-01 (SQLite Schema) + Plan 02-02 (ETL Pipeline).
