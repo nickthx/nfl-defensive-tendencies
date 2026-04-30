@@ -5,37 +5,37 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 2 — Data Layer (ETL + SQLite Schema) — ready to plan
+**Current focus:** Phase 3 — Analytical Layer (SQL + Python) — ready to discuss / plan
 
 ## Current Position
 
-Phase: 2 of 4 (Data Layer — ETL + SQLite Schema) — READY TO EXECUTE
-Plan: 0 of 2 complete in Phase 2 — plans authored and verified; run `/gsd-execute-phase 2` to build the data layer
-Status: Phase 2 plans locked. 02-01 (Schema, 3 tasks, wave 1) and 02-02 (ETL, 6 tasks, wave 2, depends_on 02-01) cover all 9 phase REQ-IDs (ETL-01..06, SCHEMA-01..03). Plan-checker passed all 12 dimensions; competitive_plays view predicates byte-exact to D-04, FTN↔pbp join uses validate='one_to_one' + match_rate>0.95, DB filename nfl_defensive_tendencies.db consistent throughout.
-Last activity: 2026-04-29 — Phase 2 plan-phase complete. 02-01-PLAN.md (358 lines) and 02-02-PLAN.md (982 lines) written. Goal-backward traceability: all 5 ROADMAP success criteria map to specific plan tasks; 02-02 Task 6 is the end-to-end ≤10m cold / ≤5m warm budget gate.
+Phase: 3 of 4 (Analytical Layer — SQL + Python) — READY TO START
+Plan: 2 of 2 complete in Phase 2 — data layer built and verified; run `/gsd-discuss-phase 3` to begin Phase 3.
+Status: Phase 2 COMPLETE. Schema (3 tables, 5 indexes, 1 view) authored in `schema/`; ETL pipeline (6 modules) authored in `etl/`; `data/nfl_defensive_tendencies.db` regenerable via `python -m etl.run` in 0m 36s cold / 0m 09s warm (well inside the 10m / 5m budget). All 9 Phase 2 REQ-IDs (ETL-01..06, SCHEMA-01..03) verified PASS against the live DB; verifier report at `.planning/phases/02-data-layer-etl-sqlite-schema/02-VERIFICATION.md`.
+Last activity: 2026-04-29 — Phase 2 execute-phase complete. 10 atomic commits (e340291 → 0f39d50). End-to-end build produced 1,139 games / 197,362 plays / 185,215 ftn_play / 105,556 competitive_plays. Two calibration findings documented and accepted as PASS-WITH-DOCUMENTATION (see Decisions below).
 
-Progress: [██░░░░░░░░] 25%
+Progress: [█████░░░░░] 50%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 2
-- Average duration: 17.5m
-- Total execution time: 35m
+- Total plans completed: 4
+- Average duration: 13.4m
+- Total execution time: 53.5m (Phase 1: 35m / Phase 2: 18.5m)
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 1. Foundation & FTN Pivot Calibration | 2 / 2 (COMPLETE) | 35m | 17.5m |
-| 2. Data Layer (ETL + Schema) | 0 | — | — |
+| 2. Data Layer (ETL + Schema) | 2 / 2 (COMPLETE) | 18.5m | 9.25m |
 | 3. Analytical Layer (SQL + Python) | 0 | — | — |
 | 4. Story & Ship | 0 | — | — |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 Bootstrap (10m, 3 task commits, 2 deviations auto-fixed); 01-02 FTN Audit (25m, 3 task commits, 0 Rule-1/2/3 deviations, 1 setup-procedure reapplication, 2 documented findings flagged for v2)
-- Post-Phase-1 cleanup (commit 182ff15): voice cleanup applied to README Hook + ftn-schema-audit.md (internal codes stripped, em dashes removed, "not X, Y" patterns rewritten); scope expanded 2022-2024 → 2022-2025 (D-10); audit notebook re-run; SHIP-08 placeholder ship-guard filed; SPEC.md pin aligned; ruff clean. Re-verification: passed 14/14.
-- Trend: on-pace; Phase 1 closed cleanly with all 14 requirements met and recruiter-facing prose voice-reviewed.
+- Phase 2 plans landed in well under budget — 02-01 (Schema, 3 commits, 1 documented Rule-3 deviation on a comment substring); 02-02 (ETL, 6 commits, 4 documented deviations: 2 calibration findings against plan thresholds + 2 Windows runtime adjustments). Cold-cache end-to-end build was 36s vs 10m budget; warm-cache was 9s vs 5m budget.
+- Post-Phase-1 cleanup (commit 182ff15): voice cleanup applied to README Hook + ftn-schema-audit.md; scope expanded 2022-2024 → 2022-2025 (D-10); audit notebook re-run; SHIP-08 placeholder ship-guard filed; SPEC.md pin aligned; ruff clean. Re-verification: passed 14/14.
+- Trend: ahead of pace; Phase 2 closed cleanly with all 9 requirements met and verifier PASS. Two calibration findings flagged for Phase 3 ingestion (see Decisions below).
 
 *Updated after each plan completion*
 
@@ -62,6 +62,8 @@ Recent decisions affecting current work:
 - **v2 candidate flagged**: pbp now exposes ngs-derived `defense_coverage_type` (0.025 NaN on pass) and `defense_man_zone_type` (0.023 NaN on pass) at populated rates. v1 stays as locked because pivot decision is in writing (D-09); using these would re-open the man-zone framing the project deliberately stepped away from. Documented in `docs/ftn-schema-audit.md`.
 - **D-10: Scope expanded 2022-2024 → 2022-2025** (post-Phase-1 cleanup, commit 182ff15). The 2025 NFL season completed February 2026 with Super Bowl LX. Pre-pivot data-quality check (`scratch/verify_2025.py`) confirmed full schema parity (29 columns, no adds/removes), 4-season match rate 0.9999, all 8 anchor candidates re-validated against the 30% NaN cutoff. 4-season totals: 80,782 pass / 59,824 run / 140,606 competitive plays. Audit notebook re-run end-to-end; CSV regenerated. Adds current-season recency for recruiters without disturbing the locked anchor set or the 4-situation slate.
 - **SHIP-08 filed** (post-Phase-1 cleanup): placeholder ship-guard requirement — `! grep -qE '<[A-Z_]{4,}>' README.md` and same for FINDINGS.md must hold before push. Enforced as a step in the SHIP-01 GitHub Actions workflow. Phase 4 count went from 20 → 21; total v1 reqs 55 → 56.
+- **D-11 Phase 2 calibration: competitive_plays universe is 105,556 (not 140,606)** (Plan 02-02 end-to-end build, commit d680e09). Phase 1's 140,606 figure was measured pre-wp-filter (only `play_type IN ('pass','run')` applied). The locked D-04 predicate stack (wp 0.05-0.95 + qtr<=4 + end-of-half hurry-up exclusion) trims ~25% of competitive plays. View body in `schema/03_views.sql` is byte-exact to CONTEXT D-04. Phase 3 must reference 105,556 as the competitive universe — N≥30 / N≥100 sample-size discipline still has ample headroom (S1 3rd-and-long alone returns N=9,925).
+- **D-12 Phase 2 calibration: match_rate semantic in build_db.py is pbp-play-type-coverage, not FTN/pbp join coverage** (Plan 02-02, commit 884fde8). With `pbp.merge(ftn, how='left')`, `joined['play_type'].notna().mean()` is the rate of non-null play_type on the pbp side (NaN for kickoffs / no_play / etc.) — observed 0.9705. Phase 1's 0.9999 was measured the OTHER direction (`ftn.merge(pbp)`). Both exceed the 0.95 floor; CONTEXT specifics explicitly mandated this exact formula. Phase 3 won't quote match_rate, but any future build_db maintainer needs to know the assertion does NOT verify FTN coverage of pbp — for that, query `(SELECT COUNT(*) FROM plays p LEFT JOIN ftn_play f USING (game_id, play_id) WHERE f.game_id IS NULL) / COUNT(plays)`. Flagged for v2 follow-up.
 
 ### Pending Todos
 
@@ -88,5 +90,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-29
-Stopped at: Phase 2 discuss-phase complete. 02-CONTEXT.md captures 16 implementation decisions across 4 gray areas (competitive_plays view predicate set; plays column whitelist + season/week denormalization; etl/run.py CLI ergonomics + idempotency; runtime UX — logging + assertions). 02-DISCUSSION-LOG.md records the alternatives considered. **Phase 2 context locked; no plans yet.**
-Resume file: `.planning/phases/02-data-layer-etl-sqlite-schema/02-CONTEXT.md`. Run `/gsd-plan-phase 2` to generate Plan 02-01 (SQLite Schema) + Plan 02-02 (ETL Pipeline).
+Stopped at: Phase 2 execute-phase complete. Wave 1 (02-01 schema, 4 commits) and Wave 2 (02-02 ETL, 6 commits) landed atomically; gsd-verifier returned PASS at commit 0f39d50. `data/nfl_defensive_tendencies.db` is regenerable from a clean state in 36s cold / 9s warm. Two calibration findings (D-11 competitive universe = 105,556; D-12 match_rate semantic) recorded above for Phase 3 ingestion. **Phase 2 fully closed; data layer is the foundation Phase 3 reads from.**
+Resume file: `.planning/phases/02-data-layer-etl-sqlite-schema/02-VERIFICATION.md`. Run `/gsd-discuss-phase 3` to begin the analytical layer (8 SQL files + 3 notebooks + FINDINGS.md memo).

@@ -31,18 +31,18 @@ REQ-IDs are grouped by architectural layer. Phase mapping is filled in by the ro
 
 ### ETL Pipeline
 
-- [ ] **ETL-01**: `etl/load_pbp.py` pulls nflfastR play-by-play via `nfl_data_py.import_pbp_data` to `data/raw/pbp_<year>.parquet` (idempotent — skips if cached)
-- [ ] **ETL-02**: `etl/load_ftn.py` pulls FTN charting via `nfl_data_py.import_ftn_data` to `data/raw/ftn_<year>.parquet` (idempotent)
-- [ ] **ETL-03**: `etl/columns.py` defines column whitelist + rename map as the single source of truth for the curated schema
-- [ ] **ETL-04**: `etl/build_db.py` reads parquet caches, applies whitelist, joins FTN↔pbp on `nflverse_game_id` + `nflverse_play_id` with `validate='one_to_one'` AND post-join match-rate assertion `>0.95`
-- [ ] **ETL-05**: `etl/run.py` is a single CLI entry — `python -m etl.run` runs load_pbp + load_ftn + build_db end-to-end with progress logging
-- [ ] **ETL-06**: ETL completes on a stock laptop in ≤5 minutes after raw caches are populated; ≤10 minutes from a cold cache
+- [x] **ETL-01**: `etl/load_pbp.py` pulls nflfastR play-by-play via `nfl_data_py.import_pbp_data` to `data/raw/pbp_<year>.parquet` (idempotent — skips if cached)
+- [x] **ETL-02**: `etl/load_ftn.py` pulls FTN charting via `nfl_data_py.import_ftn_data` to `data/raw/ftn_<year>.parquet` (idempotent)
+- [x] **ETL-03**: `etl/columns.py` defines column whitelist + rename map as the single source of truth for the curated schema
+- [x] **ETL-04**: `etl/build_db.py` reads parquet caches, applies whitelist, joins FTN↔pbp on `nflverse_game_id` + `nflverse_play_id` with `validate='one_to_one'` AND post-join match-rate assertion `>0.95`
+- [x] **ETL-05**: `etl/run.py` is a single CLI entry — `python -m etl.run` runs load_pbp + load_ftn + build_db end-to-end with progress logging
+- [x] **ETL-06**: ETL completes on a stock laptop in ≤5 minutes after raw caches are populated; ≤10 minutes from a cold cache
 
 ### SQLite Schema
 
-- [ ] **SCHEMA-01**: `schema/01_create_tables.sql` defines `games`, `plays`, `ftn_play` (lightly normalized; `(game_id, play_id)` PK on `plays` and `ftn_play`)
-- [ ] **SCHEMA-02**: `schema/02_indexes.sql` creates composite indexes for situational queries: `(down, ydstogo, yardline_100)`, `(defteam, season)`, plus the PKs
-- [ ] **SCHEMA-03**: `schema/03_views.sql` defines `competitive_plays` view filtering on `play_type IN ('pass','run')` AND `wp BETWEEN 0.05 AND 0.95` AND excluding 2-minute-drill / OT — referenced by every analytical query
+- [x] **SCHEMA-01**: `schema/01_create_tables.sql` defines `games`, `plays`, `ftn_play` (lightly normalized; `(game_id, play_id)` PK on `plays` and `ftn_play`)
+- [x] **SCHEMA-02**: `schema/02_indexes.sql` creates composite indexes for situational queries: `(down, ydstogo, yardline_100)`, `(defteam, season)`, plus the PKs
+- [x] **SCHEMA-03**: `schema/03_views.sql` defines `competitive_plays` view filtering on `play_type IN ('pass','run')` AND `wp BETWEEN 0.05 AND 0.95` AND excluding 2-minute-drill / OT — referenced by every analytical query
 
 ### SQL Analysis Layer
 
