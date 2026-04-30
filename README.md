@@ -1,7 +1,12 @@
 # NFL Defensive Tendencies
 
 ## Hook
-<!-- 2-3 sentences, plain English, names the public-FTN pivot. Filled in Phase 1 / AUDIT-07. -->
+
+Three seasons (2022-2024) of NFL play-by-play and FTN charting, asking which defenses are predictable in known situations.
+
+The public FTN charting subset distributed via nflverse exposes broader defensive tendencies (pressure, play-fakery, personnel and location) but not the proprietary Cover-shell or man-zone labels that live in FTN's paid product. This project pivots to those broader tendencies.
+
+The deliverable: 32 defenses ranked on a 0-100 predictability index across four pre-registered situations. <MOST_PREDICTABLE_DEFENSE> ranks first; <PREDICTABILITY_GAP_VS_LEAGUE_AVG> separates them from the league average.
 
 ## Findings preview
 <!-- 3-4 stat-first bullets with N inline. Placeholders here; numbers fill in Phase 4 / DOC-03. -->

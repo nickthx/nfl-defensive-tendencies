@@ -82,16 +82,16 @@ nfl-coverage-tendencies/                  # local folder; public repo name set i
 *Final folder names may shift slightly based on Phase 1 calibration.*
 
 ## Business Questions to Answer
-Each becomes a SQL query, Python analysis, or both. Final wording will be calibrated to whichever defensive dimensions are picked in Phase 1.
+Each becomes a SQL query, Python analysis, or both. Anchored on the four dimensions named in `docs/ftn-schema-audit.md`: `n_blitzers` and `n_pass_rushers` (pressure, on `play_type='pass'`), `is_play_action` (cross-cutting D-07 modifier), and `n_offense_backfield` (personnel, on competitive plays).
 
-1. **Distribution baseline:** What's the league-wide defensive tendency mix on the chosen dimensions? How does each team deviate from baseline?
-2. **Down & distance:** Which teams are most predictable on 3rd-and-long? 1st down? Goal-to-go?
-3. **Field zone:** How do tendencies change in the red zone vs between the 20s? Backed-up vs midfield?
-4. **EPA allowed:** Which defensive looks give up the most EPA per play? Per team?
-5. **Predictability score:** Build a single metric per team measuring how predictable their defense is given situation. Rank all 32 teams.
-6. **Play-action vulnerability:** Which defensive looks are most exploited by play-action? Which teams stay disciplined?
-7. **Drift over time:** Do coordinators adapt week-over-week, or do tendencies stay sticky?
-8. **Exploitable matchups:** Identify 2–3 specific team-situation combos with extreme tendencies (>75% one look)
+1. **Distribution baseline:** What is the league-wide blitz rate (`n_blitzers > 4`) and pass-rusher count (`n_pass_rushers`) distribution on `play_type='pass'`, and how does each team's rate deviate from the league baseline? How does the `n_offense_backfield` distribution shift between 1st-and-10 and 3rd-and-long?
+2. **Down & distance:** Which teams have the most predictable blitz rate on 3rd-and-long (S1)? On 1st-and-10 (S3)? On 2nd-and-medium (S4)? Predictability is computed against a normalized Shannon entropy over the chosen anchor's support.
+3. **Field zone:** How does `n_pass_rushers` distribution change in the red zone (S2 — `yardline_100 <= 20`) vs midfield, controlling for down and distance? Which teams have the largest red-zone-vs-midfield gap?
+4. **EPA allowed:** Which `n_pass_rushers` count (4-rusher vs 5+-rusher) gives up the most EPA per play league-wide? Per team? Across the 4 pre-registered situations only (firewall per D-05).
+5. **Predictability score:** Build a single 0-100 Predictability Index per team, computed *conditional on situation* using `H/log(k)` over fixed anchor support OR KL-from-league-baseline (chosen in Phase 3 / STAT-04). Rank all 32 teams.
+6. **Play-action stratification (D-07):** Within each pre-registered situation, how does each team's blitz rate differ between `is_play_action=true` and `is_play_action=false` pass plays? Reported only when both stratum sizes meet N>=30. Cross-cutting modifier across the 4 situations rather than its own slate item.
+7. **Drift over time:** Do coordinators' anchor-dimension rates (blitz rate, pass-rusher distribution, `n_offense_backfield` mix) drift week-over-week within a season, or stay sticky? Measured as week-to-week rate variance with N>=30 per team-week.
+8. **Exploitable matchups (firewall):** Within the 4 pre-registered situations only, identify the team-situation combos where the chosen anchor rate is "extreme" (>75% one look) with N>=100 across 2022-2024. Anything outside the 4-situation slate stays exploratory and is not a headline finding.
 
 ## Technical Requirements
 - **SQL queries** must include: window functions, CTEs, joins across both data sources, situational filtering

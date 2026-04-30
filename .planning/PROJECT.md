@@ -67,7 +67,7 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 ## Constraints
 
 - **Python**: 3.11 only (cap; `nfl-data-py==0.3.3` install fails on 3.13 per upstream issue #122)
-- **Locked tech stack**: `nfl-data-py==0.3.3`, `numpy<2.0` (forced by upstream `np.float_` reference), `pandas>=2.2,<2.4`, SQLite, Jupyter, matplotlib/seaborn, scipy. NO Streamlit, NO Postgres / DuckDB / Docker / cloud DB, NO `nflreadpy` for v1.
+- **Locked tech stack**: `nfl-data-py==0.3.3`, `numpy<2.0` (forced by upstream `np.float_` reference), `pandas>=2.1,<2.3`, SQLite, Jupyter, matplotlib/seaborn, scipy. NO Streamlit, NO Postgres / DuckDB / Docker / cloud DB, NO `nflreadpy` for v1.
 - **Reproducibility budget**: clone → first chart in ≤ 5 commands, ≤ 10 minutes on a stock laptop (excluding initial `nfl_data_py` data pull).
 - **Public-repo discipline**: nothing checked in we'd be embarrassed for a recruiter to read — no scratch files, no AI-generated README boilerplate, no PFF/paid data. nflverse CC-BY-SA attribution required in README.
 - **`.db` is gitignored**: 200–400 MB > 100 MiB GitHub limit; recruiter regenerates via ETL.
@@ -93,6 +93,7 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 | Ship via GitHub MCP | Connected MCP enables repo creation, topic configuration, pinning in one flow | — Pending |
 | Tiered sample-size discipline (N≥15 / 30 / 100) | Single threshold loses analytical nuance; tiered system surfaces "extreme" claims with proper rigor | — Pending |
 | Normalized Shannon entropy (H/log(k)) for predictability score | Raw entropy isn't comparable across different support sizes; normalization is the rigorous default | — Pending |
+| D-09: Public GitHub repo name | Locked to `nfl-defensive-tendencies` after Phase 1 audit confirmed the public-FTN pivot; `coverage` framing in original repo name no longer accurate. Working folder stays `nfl-coverage-tendencies` for git history continuity. | Locked 2026-04-29 |
 
 ## Evolution
 
@@ -112,4 +113,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-29 after research phase + post-pivot reframe*
+*Last updated: 2026-04-29 after Phase 1 D-09 lock + pandas pin alignment*
