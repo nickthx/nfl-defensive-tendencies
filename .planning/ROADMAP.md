@@ -63,11 +63,11 @@ Plans:
   3. Re-running `python -m etl.run` on a populated cache is idempotent (no re-downloads, no duplicate rows) (ETL-01, ETL-02).
   4. `SELECT COUNT(*) FROM competitive_plays` returns a non-zero row count, filtered to `play_type IN ('pass','run')` AND `wp BETWEEN 0.05 AND 0.95` AND excluding 2-minute drill / OT (SCHEMA-03).
   5. Composite indexes on `(down, ydstogo, yardline_100)` and `(defteam, season)` plus `(game_id, play_id)` PKs exist on `plays` and `ftn_play` (SCHEMA-01, SCHEMA-02).
-**Plans**: TBD (likely 2)
+**Plans:** 2 plans
 
 Plans:
-- [ ] 02-01: SQLite Schema (SCHEMA-01..03) — `01_create_tables.sql`, `02_indexes.sql`, `03_views.sql` with the `competitive_plays` definition (project-wide single source of truth)
-- [ ] 02-02: ETL Pipeline (ETL-01..06) — `load_pbp.py`, `load_ftn.py`, `columns.py`, `build_db.py` (with `validate='one_to_one'` + match-rate assertion), `run.py` CLI, performance budget verification
+- [ ] 02-01-PLAN.md — SQLite Schema (SCHEMA-01..03): `schema/01_create_tables.sql`, `schema/02_indexes.sql`, `schema/03_views.sql` with the locked `competitive_plays` view definition (project-wide single source of truth)
+- [ ] 02-02-PLAN.md — ETL Pipeline (ETL-01..06): `etl/__init__.py`, `etl/columns.py` (SSOT), `etl/load_pbp.py`, `etl/load_ftn.py` (year-by-year idempotent), `etl/build_db.py` (`validate='one_to_one'` + match-rate assert), `etl/run.py` (zero-flag CLI + D-16 summary log)
 
 **In-phase parallelism:** 02-01 (Schema) and 02-02 (ETL) **start in parallel** — schema files are static SQL and the ETL loaders (`load_pbp.py`, `load_ftn.py`, `columns.py`) don't depend on schema. They **converge serially** at `build_db.py`, which executes the schema files and applies the column whitelist. Within 02-02, `load_pbp.py`, `load_ftn.py`, and `columns.py` are independent and parallel; `build_db.py` is serial after them; `run.py` is the final assembly. SCHEMA-03 (`competitive_plays`) MUST be complete before any QUERY-* requirement starts in Phase 3 — this is enforced by the phase boundary.
 **Plans**: TBD

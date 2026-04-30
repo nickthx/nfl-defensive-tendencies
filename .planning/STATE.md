@@ -9,10 +9,10 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 
 ## Current Position
 
-Phase: 2 of 4 (Data Layer — ETL + SQLite Schema) — CONTEXT GATHERED
-Plan: 0 of 2 in Phase 2 — ready to run `/gsd-plan-phase 2` (will produce Plan 02-01 Schema + Plan 02-02 ETL)
-Status: Phase 2 context locked. 16 implementation decisions captured across 4 gray areas (competitive_plays predicates, plays whitelist + denormalization, ETL CLI + idempotency, runtime UX).
-Last activity: 2026-04-29 — Phase 2 discuss-phase complete. 02-CONTEXT.md + 02-DISCUSSION-LOG.md written. Headline locks: `competitive_plays` view predicate set finalized (include Q4 crunch time, drop end-of-half hurry-up only, play_type-only); plays whitelist locked at ~24 cols with season+week denormalized; REG+POST included with season_type on games; etl/run.py is zero-flag with year-by-year idempotent loaders; stdlib logging at INFO with timestamp+level; inline asserts for row counts and match-rate.
+Phase: 2 of 4 (Data Layer — ETL + SQLite Schema) — READY TO EXECUTE
+Plan: 0 of 2 complete in Phase 2 — plans authored and verified; run `/gsd-execute-phase 2` to build the data layer
+Status: Phase 2 plans locked. 02-01 (Schema, 3 tasks, wave 1) and 02-02 (ETL, 6 tasks, wave 2, depends_on 02-01) cover all 9 phase REQ-IDs (ETL-01..06, SCHEMA-01..03). Plan-checker passed all 12 dimensions; competitive_plays view predicates byte-exact to D-04, FTN↔pbp join uses validate='one_to_one' + match_rate>0.95, DB filename nfl_defensive_tendencies.db consistent throughout.
+Last activity: 2026-04-29 — Phase 2 plan-phase complete. 02-01-PLAN.md (358 lines) and 02-02-PLAN.md (982 lines) written. Goal-backward traceability: all 5 ROADMAP success criteria map to specific plan tasks; 02-02 Task 6 is the end-to-end ≤10m cold / ≤5m warm budget gate.
 
 Progress: [██░░░░░░░░] 25%
 
