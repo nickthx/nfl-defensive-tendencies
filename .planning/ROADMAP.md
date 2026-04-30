@@ -24,8 +24,8 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
 ## Phases
 
 - [x] **Phase 1: Foundation & FTN Pivot Calibration** - Bootstrap the repo and lock the 3–4 anchor defensive dimensions (completed 2026-04-29; 4 anchors locked: n_blitzers, n_pass_rushers, is_play_action, n_offense_backfield)
-- [ ] **Phase 2: Data Layer (ETL + SQLite Schema)** - Reproducible parquet→SQLite pipeline with `competitive_plays` view
-- [ ] **Phase 3: Analytical Layer (SQL + Python)** - 8 queries, predictability index, chi-square evidence
+- [x] **Phase 2: Data Layer (ETL + SQLite Schema)** - Reproducible parquet→SQLite pipeline with `competitive_plays` view (completed 2026-04-29; 1,139 games / 197,362 plays / 185,215 ftn_play / 105,556 competitive_plays)
+- [x] **Phase 3: Analytical Layer (SQL + Python)** - 8 queries, predictability index, chi-square evidence (completed 2026-04-30; 11 execution commits, 17/17 REQ-IDs delivered, 4 substantive findings — see STATE.md D-14..D-17)
 - [ ] **Phase 4: Story & Ship (Viz + Docs + Public GitHub)** - FINDINGS.md memo, hand-written README, public repo via GitHub MCP
 
 ---
@@ -88,9 +88,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 03-01-PLAN.md — Python analytical scaffolding (STAT-01, STAT-02, STAT-03) — `_common.py`, `_style.py`, `01_exploratory.ipynb` (descriptive stats + sample-size profiling, flags cells <N=30)
-- [ ] 03-02-PLAN.md — SQL Analysis Layer (QUERY-01..09) — 8 query files with documented headers, all referencing `competitive_plays`
-- [ ] 03-03-PLAN.md — Predictability Modeling (STAT-04, STAT-05, STAT-06, STAT-07, STAT-08) — `02_predictability_modeling.ipynb` with normalization in cell 1, chi-square + effect size + Wilson CI on a pre-registered situation, sensitivity check, `min_n_filter` enforcement
+- [x] 03-01-PLAN.md — Python analytical scaffolding (STAT-01, STAT-02, STAT-03) — `_common.py`, `_style.py`, `01_exploratory.ipynb` (descriptive stats + sample-size profiling, flags cells <N=30) (completed 2026-04-30)
+- [x] 03-02-PLAN.md — SQL Analysis Layer (QUERY-01..09) — 8 query files with documented headers, all referencing `competitive_plays` (completed 2026-04-30)
+- [x] 03-03-PLAN.md — Predictability Modeling (STAT-04, STAT-05, STAT-06, STAT-07, STAT-08) — `02_predictability_modeling.ipynb` with normalization in cell 1, chi-square + effect size + Wilson CI on a pre-registered situation, sensitivity check, `min_n_filter` enforcement (completed 2026-04-30)
 
 **In-phase parallelism:** 03-01 (scaffolding) is the serial **prerequisite** — `_common.py`, `_style.py`, and the exploratory notebook must exist before 03-02 and 03-03 can import from them. After 03-01 completes, **03-02 (queries) and 03-03 (predictability modeling) run in parallel** — they read from the same SQLite tables but produce independent artifacts. Within 03-02, all 8 query files are independent and parallel-writable; QUERY-09 (cross-cutting compliance check on header docs / `competitive_plays` references) is the final serial verification. Within 03-03, STAT-04 (normalization scheme — FIRST cell) gates STAT-05/STAT-06/STAT-07/STAT-08; once locked, the chi-square (STAT-06) and sensitivity check (STAT-08) can run in parallel.
 **UI hint**: no
@@ -129,8 +129,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4. Decimal phases inserted on
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. Foundation & FTN Pivot Calibration | 2/2 | Complete | 2026-04-29 |
-| 2. Data Layer (ETL + SQLite Schema) | 0/TBD | Not started | - |
-| 3. Analytical Layer (SQL + Python) | 0/TBD | Not started | - |
+| 2. Data Layer (ETL + SQLite Schema) | 2/2 | Complete | 2026-04-29 |
+| 3. Analytical Layer (SQL + Python) | 3/3 | Complete | 2026-04-30 |
 | 4. Story & Ship (Viz + Docs + Public GitHub) | 0/TBD | Not started | - |
 
 ---
