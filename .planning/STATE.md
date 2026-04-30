@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 3 — Analytical Layer (SQL + Python) — planned, ready to execute
+**Current focus:** Phase 3 — Analytical Layer (SQL + Python) — 03-01 complete, Wave 2 ready (03-02 + 03-03)
 
 ## Current Position
 
-Phase: 3 of 4 (Analytical Layer — SQL + Python) — READY TO EXECUTE
-Plan: 3 plans landed in `.planning/phases/03-analytical-layer-sql-python/` and verified PASS by gsd-plan-checker on first iteration. Wave 1 = 03-01 scaffolding (`_common.py` / `_style.py` / `01_exploratory.ipynb`, STAT-01..03); Wave 2 fans out 03-02 (8 SQL queries with locked D-07 filenames + D-08 6-section headers, QUERY-01..09) and 03-03 (`02_predictability_modeling.ipynb` with Cell-1 methodology lock, S1 PA×blitz chi-square + OR/Wilson CI, STAT-08 sensitivity, STAT-04..08) in parallel.
-Status: Phase 2 COMPLETE; Phase 3 PLANNED. All 17 REQ-IDs (QUERY-01..09 + STAT-01..08) mapped across 3 plans with no orphans/duplicates. Verifier reported PASS across 12 dimensions + 14 phase-specific must-checks (filename lock, header convention, Cell-1 literal formulas, chi-square scope, sensitivity-check scope, deep-work rules). Run `/gsd-execute-phase 3` (after `/clear`) to proceed.
-Last activity: 2026-04-30 — `/gsd-plan-phase 3` complete. 3 PLAN.md files written (520 / 659 / 686 lines); ROADMAP.md Phase 3 placeholders finalized (`Plans: 3 plans`, plan checkbox lines reference `03-NN-PLAN.md`). Verifier PASS first iteration; no revisions needed. Plans not yet committed (awaiting user direction). Phase 2 verifier PASS at commit 0f39d50 still authoritative as the data-layer foundation.
+Phase: 3 of 4 (Analytical Layer — SQL + Python) — IN PROGRESS (1/3 plans complete)
+Plan: 03-01 scaffolding COMPLETE (commits b941ecc, 8bd08c9, a6a46bd). Wave 2 = 03-02 (8 SQL queries) + 03-03 (`02_predictability_modeling.ipynb`) can now execute in parallel — both depend on 03-01 deliverables.
+Status: Phase 2 COMPLETE; Phase 3 plan 03-01 COMPLETE. STAT-01 (SEED), STAT-02 (apply_style/savefig.dpi=200), STAT-03 (exploratory notebook sample-size profiling) all delivered. All 128 (defteam × situation) cells across S1/S2/S3/S4 clear N≥30 — no dropout cells. 03-02 + 03-03 unblocked.
+Last activity: 2026-04-30 — 03-01 executed. `analysis/_common.py` (SEED=42, DB_PATH, get_conn, min_n_filter), `analysis/_style.py` (apply_style, colorblind palette, savefig.dpi=200), `analysis/01_exploratory.ipynb` + paired `.py` (jupytext, competitive_plays S1–S4 profiling, blitz anchor). 3 deviations documented: unused imports removed (ruff F401), Path.cwd() walk replaces Path(__file__) in notebook cells (NameError), # noqa: E402 on post-path-setup imports.
 
-Progress: [██████░░░░] 60%
+Progress: [███████░░░] 65%
 
 ## Performance Metrics
 
@@ -29,7 +29,7 @@ Progress: [██████░░░░] 60%
 |-------|-------|-------|----------|
 | 1. Foundation & FTN Pivot Calibration | 2 / 2 (COMPLETE) | 35m | 17.5m |
 | 2. Data Layer (ETL + Schema) | 2 / 2 (COMPLETE) | 18.5m | 9.25m |
-| 3. Analytical Layer (SQL + Python) | 0 / 3 (READY) | — | — |
+| 3. Analytical Layer (SQL + Python) | 1 / 3 (IN PROGRESS) | 18m | 18m |
 | 4. Story & Ship | 0 | — | — |
 
 **Recent Trend:**
@@ -91,5 +91,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Phase 3 PLANNED. 3 PLAN.md files (03-01 / 03-02 / 03-03) written and verified PASS first iteration. Wave structure: 03-01 (wave 1, deps=[]) is the serial scaffolding prerequisite; 03-02 + 03-03 (wave 2, deps=[03-01]) fan out in parallel. ROADMAP.md Phase 3 placeholders finalized inline. All 17 REQ-IDs covered; D-07 filename lock + D-08 header convention + D-01..D-06 Cell-1 methodology lock + D-09 chi-square scope + D-13 sensitivity scope all enforced as grep-verifiable acceptance criteria. **Plans not yet committed — awaiting user direction.** Data layer (Phase 2) verifier PASS at 0f39d50 still authoritative.
-Resume file: `.planning/phases/03-analytical-layer-sql-python/03-01-PLAN.md`. Run `/gsd-execute-phase 3` (after `/clear`) to execute the 3 plans across 2 waves.
+Stopped at: Phase 3 plan 03-01 COMPLETE (commit a6a46bd). analysis/_common.py + _style.py + 01_exploratory.ipynb delivered. All 128 (defteam × situation) cells clear N≥30 — no dropout candidates. Wave 2 (03-02 SQL queries + 03-03 predictability modeling) is now unblocked and can execute in parallel.
+Resume file: `.planning/phases/03-analytical-layer-sql-python/03-02-PLAN.md` (Wave 2, run in parallel with 03-03).
