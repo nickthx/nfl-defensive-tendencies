@@ -70,7 +70,6 @@ Plans:
 - [ ] 02-02-PLAN.md — ETL Pipeline (ETL-01..06): `etl/__init__.py`, `etl/columns.py` (SSOT), `etl/load_pbp.py`, `etl/load_ftn.py` (year-by-year idempotent), `etl/build_db.py` (`validate='one_to_one'` + match-rate assert), `etl/run.py` (zero-flag CLI + D-16 summary log)
 
 **In-phase parallelism:** 02-01 (Schema) and 02-02 (ETL) **start in parallel** — schema files are static SQL and the ETL loaders (`load_pbp.py`, `load_ftn.py`, `columns.py`) don't depend on schema. They **converge serially** at `build_db.py`, which executes the schema files and applies the column whitelist. Within 02-02, `load_pbp.py`, `load_ftn.py`, and `columns.py` are independent and parallel; `build_db.py` is serial after them; `run.py` is the final assembly. SCHEMA-03 (`competitive_plays`) MUST be complete before any QUERY-* requirement starts in Phase 3 — this is enforced by the phase boundary.
-**Plans**: TBD
 **UI hint**: no
 
 ---
@@ -100,7 +99,7 @@ Plans:
 ### Phase 4: Story & Ship (Viz + Docs + Public GitHub)
 **Goal**: The recruiter signal is delivered — a hand-written README with hero chart above the fold, a memo-style FINDINGS.md, and a public GitHub repo configured via the GitHub MCP (description, topics, social preview, pinned).
 **Depends on**: Phase 3 (predictability index + chi-square evidence must exist for the story)
-**Requirements**: VIZ-01, VIZ-02, VIZ-03, VIZ-04, VIZ-05, DOC-01, DOC-02, DOC-03, DOC-04, DOC-05, DOC-06, DOC-07, DOC-08, SHIP-01, SHIP-02, SHIP-03, SHIP-04, SHIP-05, SHIP-06, SHIP-07
+**Requirements**: VIZ-01, VIZ-02, VIZ-03, VIZ-04, VIZ-05, DOC-01, DOC-02, DOC-03, DOC-04, DOC-05, DOC-06, DOC-07, DOC-08, SHIP-01, SHIP-02, SHIP-03, SHIP-04, SHIP-05, SHIP-06, SHIP-07, SHIP-08
 **Success Criteria** (what must be TRUE):
   1. Opening the public repo URL in a non-author browser shows the hero chart above the fold, 3–4 stat-first bullet findings, a Mermaid architecture diagram, a 5-command setup block, and a 6-term glossary — all hand-written, no AI-template emoji headers (DOC-03, DOC-04, DOC-05, DOC-06, VIZ-02).
   2. `findings/FINDINGS.md` renders on GitHub as a memo (TL;DR → 5–7 named insights with N inline → methodology appendix → limitations → FTN+nflverse attribution); every claim states N inline with the tiered N≥30/100/15-flag discipline visible (DOC-01, DOC-02, DOC-07).
@@ -108,15 +107,14 @@ Plans:
   4. A single GitHub Actions workflow runs `ruff check` + ETL-module import smoke on push (no notebook execution) and is green on the first push to `main` (SHIP-01).
   5. The public GitHub repo is created via the GitHub MCP with description (~70 chars), 5–8 topics, social preview image (1280×640 from hero chart), and is pinned to Nick's profile via the MCP — verified in a non-author browser (SHIP-03, SHIP-04, SHIP-05, SHIP-07).
   6. `du -sh .git/` is under 50 MB and commit history contains no `WIP` / `asdf` / scratch messages (SHIP-06).
-**Plans**: TBD (likely 3)
+**Plans:** 3 plans
 
 Plans:
-- [ ] 04-01: Visualizations (VIZ-01..05) — `03_visualizations.ipynb` exports all PNGs to `findings/images/` using `_style.py` rcParams; hero chart at `findings/images/01_predictability_ranking.png`; at least one non-bar-chart (heatmap or small-multiples); `nbconvert --clear-output --inplace` on every notebook
-- [ ] 04-02: Documentation (DOC-01..08) — FINDINGS.md memo (5–7 named insights with N inline + methodology appendix + limitations); README hand-written (hero PNG, Mermaid diagram, 5-command setup, glossary, FTN+nflverse attribution, Known Issues); `data/README.md`
-- [ ] 04-03: Ship via GitHub MCP (SHIP-01..07) — GitHub Actions lint+import-smoke workflow, fresh-venv reproducibility verification, public repo creation via GitHub MCP (description, topics, social preview, pin), commit history audit, final push, non-author browser verification
+- [ ] 04-01-PLAN.md — Visualizations + S3 exploratory chi-square (VIZ-01..05) — `analysis/03_visualizations.ipynb` exports hero PNG (`findings/images/01_predictability_ranking.png`, portrait 8x11, fixed 0-100 axis), KL-vs-H rank-rank scatter (`findings/images/02_kl_vs_h_scatter.png`, inverted axes, 8 callouts via adjustText), top-12 social-preview source (`findings/images/01_predictability_ranking_top12.png`, 1280x640); appends S3 PA × blitz exploratory chi-square cells to `analysis/02_predictability_modeling.py` with OR-delta-vs-S1 first-class output; pins `adjustText` in requirements.txt
+- [ ] 04-02-PLAN.md — Documentation + cross-doc reconciliation (DOC-01..08) — `findings/FINDINGS.md` memo (TL;DR + 6 named insights + 3 thematic methodology blocks + 4 appendix tables + 5-item Limitations + attribution); README hand-rewrite (hero PNG above the fold, Mermaid data-flow diagram, 5-command setup, 6-term glossary, attribution, Known Issues); `data/README.md` extension; D-48 5-site `n_blitzers > 0` reconciliation sweep (PROJECT.md L58 / 03-CONTEXT.md D-02 / docs/ftn-schema-audit.md / README glossary / analysis/01_exploratory.py L163) with D-49 post-sweep grep verification
+- [ ] 04-03-PLAN.md — CI workflow + ship sequence (SHIP-01..08) — `.github/workflows/ci.yml` (single job: ruff + import smoke + SHIP-08 placeholder regex; push+PR triggers; concurrency cancel-in-progress); fresh-venv reproducibility scripts (POSIX + Windows); `LICENSE` (MIT); private-then-public GitHub MCP ship flow with branch protection on main gated on `lint-and-import-smoke`; social preview + profile pin (MCP-or-UI fallback path logged); commit-history audit (SHIP-06); incognito desktop + mobile non-author verification (SHIP-07, D-42)
 
 **In-phase parallelism:** 04-01 (Visualizations) is the serial **prerequisite** — the hero PNG must exist before README and FINDINGS.md can embed it. After 04-01 completes, **04-02 (Documentation) draft can run in parallel with the early steps of 04-03** (the GitHub Actions workflow file SHIP-01 and the fresh-venv reproducibility script SHIP-02 don't need the README to be complete). The actual ship gate (SHIP-03..05 — repo creation via GitHub MCP, social preview upload, pinning) is **strictly serial after 04-02 completes** — you can't push to a public repo with a half-written README. SHIP-06 (commit-history audit) and SHIP-07 (non-author browser verification) are the final serial gates. Within 04-02, FINDINGS.md and README can draft in parallel after 04-01 locks the image filenames; `data/README.md` (DOC-08) is independent and parallel.
-**Plans**: TBD
 **UI hint**: no
 
 ---
@@ -131,7 +129,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4. Decimal phases inserted on
 | 1. Foundation & FTN Pivot Calibration | 2/2 | Complete | 2026-04-29 |
 | 2. Data Layer (ETL + SQLite Schema) | 2/2 | Complete | 2026-04-29 |
 | 3. Analytical Layer (SQL + Python) | 3/3 | Complete | 2026-04-30 |
-| 4. Story & Ship (Viz + Docs + Public GitHub) | 0/TBD | Not started | - |
+| 4. Story & Ship (Viz + Docs + Public GitHub) | 0/3 | Planned | - |
 
 ---
 
