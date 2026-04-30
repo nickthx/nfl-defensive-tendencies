@@ -23,7 +23,7 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
 
 ## Phases
 
-- [ ] **Phase 1: Foundation & FTN Pivot Calibration** - Bootstrap the repo and lock the 3–4 anchor defensive dimensions
+- [x] **Phase 1: Foundation & FTN Pivot Calibration** - Bootstrap the repo and lock the 3–4 anchor defensive dimensions (completed 2026-04-29; 4 anchors locked: n_blitzers, n_pass_rushers, is_play_action, n_offense_backfield)
 - [ ] **Phase 2: Data Layer (ETL + SQLite Schema)** - Reproducible parquet→SQLite pipeline with `competitive_plays` view
 - [ ] **Phase 3: Analytical Layer (SQL + Python)** - 8 queries, predictability index, chi-square evidence
 - [ ] **Phase 4: Story & Ship (Viz + Docs + Public GitHub)** - FINDINGS.md memo, hand-written README, public repo via GitHub MCP
@@ -46,7 +46,7 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
 
 Plans:
 - [x] 01-01-PLAN.md — Bootstrap (BOOT-01..07): repo skeleton, pinned `requirements.txt`, `.gitignore`, `pyproject.toml` ruff config, `.python-version`, README skeleton, fresh-venv install verification (completed 2026-04-29)
-- [ ] 01-02-PLAN.md — FTN Audit (AUDIT-01..07): `00_data_audit.ipynb`, null-profile CSV, schema-audit narrative, pre-registered analysis plan, lock repo name, rewrite SPEC business questions and README hook to post-pivot framing
+- [x] 01-02-PLAN.md — FTN Audit (AUDIT-01..07): `00_data_audit.ipynb`, null-profile CSV, schema-audit narrative, pre-registered analysis plan, lock repo name, rewrite SPEC business questions and README hook to post-pivot framing (completed 2026-04-29)
 
 **In-phase parallelism:** 01-01 (Bootstrap) and 01-02 (Audit) are **serial** — the audit notebook needs the repo skeleton (`analysis/`, `audit/`, `docs/` directories from BOOT-01) and a working venv (BOOT-07) before it can run. Within 01-01, all artifact files (`requirements.txt`, `.gitignore`, `pyproject.toml`, `.python-version`, README skeleton) are independent and parallel-writable; install verification (BOOT-07) is the single serial gate at the end. Within 01-02, AUDIT-01 → AUDIT-02 → AUDIT-03 are serial (each depends on the previous artifact); AUDIT-04 (analysis plan), AUDIT-05 (repo name), AUDIT-06 (SPEC rewrite), AUDIT-07 (README hook) can run in parallel after AUDIT-03 lands.
 **UI hint**: no
@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4. Decimal phases inserted on
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. Foundation & FTN Pivot Calibration | 1/2 | In progress | - |
+| 1. Foundation & FTN Pivot Calibration | 2/2 | Complete | 2026-04-29 |
 | 2. Data Layer (ETL + SQLite Schema) | 0/TBD | Not started | - |
 | 3. Analytical Layer (SQL + Python) | 0/TBD | Not started | - |
 | 4. Story & Ship (Viz + Docs + Public GitHub) | 0/TBD | Not started | - |

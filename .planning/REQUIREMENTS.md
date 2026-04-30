@@ -21,13 +21,13 @@ REQ-IDs are grouped by architectural layer. Phase mapping is filled in by the ro
 
 ### FTN Audit / Pivot Calibration
 
-- [ ] **AUDIT-01**: `analysis/00_data_audit.ipynb` calls `nfl.import_ftn_data([2022, 2023, 2024])`, prints column inventory, computes per-column NaN rates by `play_type`
-- [ ] **AUDIT-02**: `audit/ftn_null_profile.csv` lands NaN rates per FTN column × play_type for 2022–2024
-- [ ] **AUDIT-03**: `docs/ftn-schema-audit.md` written narrative confirming the public-FTN reality and naming the 3–4 anchor dimensions chosen
-- [ ] **AUDIT-04**: `docs/analysis-plan.md` pre-registers 3–5 situations the FINDINGS.md memo will claim findings on (multiple-comparisons discipline)
-- [ ] **AUDIT-05**: Public GitHub repo name locked (default: `nfl-defensive-tendencies`)
-- [ ] **AUDIT-06**: SPEC's 8 business questions reframed to anchor dimensions chosen in AUDIT-03 (in-place rewrite of SPEC.md or addendum)
-- [ ] **AUDIT-07**: README hook rewritten to match the post-pivot framing (plain-English problem statement)
+- [x] **AUDIT-01**: `analysis/00_data_audit.ipynb` calls `nfl.import_ftn_data([2022, 2023, 2024])`, prints column inventory, computes per-column NaN rates by `play_type`
+- [x] **AUDIT-02**: `audit/ftn_null_profile.csv` lands NaN rates per FTN column × play_type for 2022–2024
+- [x] **AUDIT-03**: `docs/ftn-schema-audit.md` written narrative confirming the public-FTN reality and naming the 3–4 anchor dimensions chosen
+- [x] **AUDIT-04**: `docs/analysis-plan.md` pre-registers 3–5 situations the FINDINGS.md memo will claim findings on (multiple-comparisons discipline)
+- [x] **AUDIT-05**: Public GitHub repo name locked (default: `nfl-defensive-tendencies`)
+- [x] **AUDIT-06**: SPEC's 8 business questions reframed to anchor dimensions chosen in AUDIT-03 (in-place rewrite of SPEC.md or addendum)
+- [x] **AUDIT-07**: README hook rewritten to match the post-pivot framing (plain-English problem statement)
 
 ### ETL Pipeline
 
@@ -154,13 +154,13 @@ Populated by the roadmapper after `ROADMAP.md` is written. Each v1 requirement m
 | BOOT-05 | Phase 1 | Complete |
 | BOOT-06 | Phase 1 | Complete |
 | BOOT-07 | Phase 1 | Complete |
-| AUDIT-01 | Phase 1 | Pending |
-| AUDIT-02 | Phase 1 | Pending |
-| AUDIT-03 | Phase 1 | Pending |
-| AUDIT-04 | Phase 1 | Pending |
-| AUDIT-05 | Phase 1 | Pending |
-| AUDIT-06 | Phase 1 | Pending |
-| AUDIT-07 | Phase 1 | Pending |
+| AUDIT-01 | Phase 1 | Complete |
+| AUDIT-02 | Phase 1 | Complete |
+| AUDIT-03 | Phase 1 | Complete |
+| AUDIT-04 | Phase 1 | Complete |
+| AUDIT-05 | Phase 1 | Complete |
+| AUDIT-06 | Phase 1 | Complete |
+| AUDIT-07 | Phase 1 | Complete |
 | ETL-01 | Phase 2 | Pending |
 | ETL-02 | Phase 2 | Pending |
 | ETL-03 | Phase 2 | Pending |
