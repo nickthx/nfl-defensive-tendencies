@@ -128,3 +128,123 @@ assert compute_predictability_index(50, 50) == 0.0, "uniform 50/50 must yield pr
 assert compute_predictability_index(100, 0) == 100.0, "deterministic must yield pred_index = 100"
 assert np.isnan(compute_predictability_index(10, 5)), "below-N cells must yield NaN"
 print("methodology-lock smoke checks passed")
+
+# %% [markdown]
+# ## Per-(team × season × situation) raw rollup
+#
+# Source: queries/07_situational_predictability_score.sql.
+# Columns: defteam, season, situation_id, blitz_count, no_blitz_count, total_pass_plays.
+
+# %%
+with get_conn() as conn:
+    raw = pd.read_sql_query(SQL_PRED_RAW, conn)
+
+print(f"Raw rollup: {len(raw):,} rows, {raw['defteam'].nunique()} teams, {raw['situation_id'].nunique()} situations")
+print(raw.head())
+
+# Aggregate across seasons within (team, situation) so the matrix is 32 x 4, not 32 x 4 x 4.
+team_sit = (
+    raw.groupby(["defteam", "situation_id"], as_index=False)
+       .agg(
+           blitz_count=("blitz_count", "sum"),
+           no_blitz_count=("no_blitz_count", "sum"),
+           total_pass_plays=("total_pass_plays", "sum"),
+       )
+)
+team_sit["n"] = team_sit["total_pass_plays"]
+team_sit["pred_index"] = team_sit.apply(
+    lambda r: compute_predictability_index(int(r["blitz_count"]), int(r["no_blitz_count"])),
+    axis=1,
+)
+team_sit["blitz_rate"] = team_sit["blitz_count"] / team_sit["total_pass_plays"]
+print(
+    f"team x situation cells: {len(team_sit)}; "
+    f"below N>={MIN_N_FOR_CELL}: {team_sit['pred_index'].isna().sum()}"
+)
+
+# %% [markdown]
+# ## 32 × 4 matrix view (D-03 FINDINGS appendix artifact)
+
+# %%
+matrix = team_sit.pivot(index="defteam", columns="situation_id", values="pred_index")
+print(f"Matrix shape: {matrix.shape}")
+print(matrix.round(1).head(10))
+print(f"Excluded cells (N<{MIN_N_FOR_CELL}): {matrix.isna().sum().sum()} of {matrix.size}")
+
+# %% [markdown]
+# ## Per-team aggregate scalar (D-03 hero-chart leaderboard input)
+
+# %%
+# Sample-size-weighted mean over surviving cells per D-05.
+filtered = min_n_filter(team_sit, n_col="n", n_threshold=MIN_N_FOR_CELL)
+
+
+def _weighted_mean(group: pd.DataFrame) -> float:
+    return float(np.average(group["pred_index"], weights=group["n"]))
+
+
+per_team_scalar = filtered.groupby("defteam", as_index=False).apply(
+    _weighted_mean, include_groups=False
+)
+# pandas can name the apply result inconsistently across versions; normalize.
+per_team_scalar.columns = ["defteam", "pred_index_scalar"]
+per_team_scalar = per_team_scalar.sort_values("pred_index_scalar", ascending=False).reset_index(
+    drop=True
+)
+
+print(f"Per-team scalar: {len(per_team_scalar)} teams")
+print(per_team_scalar.head(10).to_string(index=False))
+print("...")
+print(per_team_scalar.tail(5).to_string(index=False))
+
+# %% [markdown]
+# ## KL-from-league secondary + Spearman validation gate (D-01)
+
+# %%
+# League blitz rate per situation (denominator for KL).
+league = (
+    team_sit.groupby("situation_id", as_index=False)
+            .agg(
+                blitz_count=("blitz_count", "sum"),
+                total_pass_plays=("total_pass_plays", "sum"),
+            )
+)
+league["league_blitz_p"] = league["blitz_count"] / league["total_pass_plays"]
+
+t = team_sit.merge(league[["situation_id", "league_blitz_p"]], on="situation_id")
+t["team_blitz_p"] = t["blitz_count"] / t["total_pass_plays"]
+
+
+def _kl_row(row: pd.Series) -> float:
+    if row["n"] < MIN_N_FOR_CELL:
+        return float("nan")
+    return compute_kl_from_league(float(row["team_blitz_p"]), float(row["league_blitz_p"]))
+
+
+t["kl_div"] = t.apply(_kl_row, axis=1)
+
+# Per-team KL scalar = sample-size-weighted mean over surviving cells.
+kl_filtered = min_n_filter(t.dropna(subset=["kl_div"]).copy(), n_col="n", n_threshold=MIN_N_FOR_CELL)
+
+
+def _kl_weighted(group: pd.DataFrame) -> float:
+    return float(np.average(group["kl_div"], weights=group["n"]))
+
+
+per_team_kl = kl_filtered.groupby("defteam", as_index=False).apply(
+    _kl_weighted, include_groups=False
+)
+per_team_kl.columns = ["defteam", "kl_scalar"]
+
+both = per_team_scalar.merge(per_team_kl, on="defteam")
+both["rank_h"] = both["pred_index_scalar"].rank(ascending=False, method="min")
+both["rank_kl"] = both["kl_scalar"].rank(ascending=False, method="min")
+spearman_rho, spearman_p = stats.spearmanr(both["rank_h"], both["rank_kl"])
+
+print(f"Spearman ρ between H/log(k) and KL leaderboards: {spearman_rho:.3f} (p={spearman_p:.4f})")
+print(f"Validation gate: ρ >= {SPEARMAN_VALIDATION_GATE} ? {spearman_rho >= SPEARMAN_VALIDATION_GATE}")
+if spearman_rho < SPEARMAN_VALIDATION_GATE:
+    print("WARNING: Validation gate FAILED — divergence is a substantive finding to investigate.")
+    print("Top 5 disagreers (largest |rank_h - rank_kl|):")
+    both["rank_delta"] = (both["rank_h"] - both["rank_kl"]).abs()
+    print(both.sort_values("rank_delta", ascending=False).head(5).to_string(index=False))
