@@ -134,10 +134,28 @@ before adopting them as analytical anchors. Logged as a v2 candidate.
 
 ## Sample-size health for the 4 pre-registered situations
 
-The joined frame has 80,782 pass plays and 59,824 run plays across 2022-2025
-(140,606 competitive plays before the win-probability filter; 119,708 after).
-Situation-level sample sizes are 11,368 (3rd-and-long), 18,094 (red zone),
-47,298 (1st-and-10), and 11,814 (2nd-and-medium). All four sit well above
-the per-team-per-season N>=30 floor for tendency claims and the N>=100
-floor for "extreme" claims at the team-by-situation level. Phase 3's
-`min_n_filter()` helper is the enforcement gate.
+The four-season pull (2022 through Super Bowl LX in February 2026) has
+80,782 pass plays and 59,824 run plays in the joined frame, a raw
+play-type-only universe of 140,606 plays.
+
+The analytical universe is smaller. Phase 2's `competitive_plays` view
+(`schema/03_views.sql`) further filters to win-probability between 0.05
+and 0.95, excludes overtime, and excludes the end-of-half hurry-up
+(`NOT (qtr IN (2,4) AND half_seconds_remaining <= 120)`). The full
+predicate stack trims roughly 25%, leaving 105,556 competitive plays. This
+is the denominator every Phase 3 analytical query reads from. The trim removes
+blowout garbage-time, overtime small-sample anomalies, and end-of-half
+desperation playcalling, all of which would distort tendency analysis.
+Phase 3's predictability scoring and team-by-situation slicing both treat
+the post-filter 105,556-row view as the analytical universe; the raw
+140,606 figure is referenced only inside STAT-08's "with vs without
+filter" sensitivity check.
+
+Against the live `competitive_plays` view, the four pre-registered
+situations return 9,925 (3rd-and-long), 15,559 (red zone), 41,901
+(1st-and-10), and 10,513 (2nd-and-medium). All four sit well above the
+per-team-per-season N>=30 floor for tendency claims and the N>=100 floor
+for "extreme" claims at the team-by-situation level. The smallest situation
+(3rd-and-long) divided across 32 teams and 4 seasons leaves an average of
+~78 team-season plays, comfortable for the locked sample-size discipline.
+Phase 3's `min_n_filter()` helper is the enforcement gate.

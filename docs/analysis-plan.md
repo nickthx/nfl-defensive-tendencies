@@ -148,6 +148,24 @@ emitted on a sample below its tier; the narrative flag for the N >= 15
 exception lives in the FINDINGS.md cell that emits the claim, not in the
 helper.
 
+**Live counts against the `competitive_plays` view** (Phase 2 build,
+`data/nfl_defensive_tendencies.db`, 2026-04-29):
+
+| Universe / Situation | N |
+|---|---|
+| Total competitive plays | 105,556 |
+| S1 / 3rd-and-long (`down=3 AND ydstogo>=7`) | 9,925 |
+| S2 / Red zone (`yardline_100<=20`) | 15,559 |
+| S3 / 1st-and-10 (`down=1 AND ydstogo=10`) | 41,901 |
+| S4 / 2nd-and-medium (`down=2 AND ydstogo BETWEEN 3 AND 6`) | 10,513 |
+
+All four situations clear N >= 30 and N >= 100 at the league level by
+multiple orders of magnitude. The relevant constraint is at the
+team-by-situation cell. The smallest situation (3rd-and-long) leaves
+~78 plays per team per season on average; `min_n_filter()` enforces the
+floor at claim time so any aggregation falling below the threshold is
+rejected before it can land in FINDINGS.md.
+
 ## Why these 4 and not 5
 
 The slate sits at 4 because (a) one chi-square per situation times one
