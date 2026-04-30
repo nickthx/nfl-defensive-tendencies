@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 3 — Analytical Layer (SQL + Python) — ready to discuss / plan
+**Current focus:** Phase 3 — Analytical Layer (SQL + Python) — context gathered, ready to plan
 
 ## Current Position
 
-Phase: 3 of 4 (Analytical Layer — SQL + Python) — READY TO START
-Plan: 2 of 2 complete in Phase 2 — data layer built and verified; run `/gsd-discuss-phase 3` to begin Phase 3.
-Status: Phase 2 COMPLETE. Schema (3 tables, 5 indexes, 1 view) authored in `schema/`; ETL pipeline (6 modules) authored in `etl/`; `data/nfl_defensive_tendencies.db` regenerable via `python -m etl.run` in 0m 36s cold / 0m 09s warm (well inside the 10m / 5m budget). All 9 Phase 2 REQ-IDs (ETL-01..06, SCHEMA-01..03) verified PASS against the live DB; verifier report at `.planning/phases/02-data-layer-etl-sqlite-schema/02-VERIFICATION.md`.
-Last activity: 2026-04-29 — Phase 2 execute-phase complete. 10 atomic commits (e340291 → 0f39d50). End-to-end build produced 1,139 games / 197,362 plays / 185,215 ftn_play / 105,556 competitive_plays. Two calibration findings documented and accepted as PASS-WITH-DOCUMENTATION (see Decisions below).
+Phase: 3 of 4 (Analytical Layer — SQL + Python) — CONTEXT GATHERED
+Plan: Phase 3 context locked across 3 discussed gray areas (Predictability Index design, 8-query slate, chi-square + sensitivity targets); `_common.py` helper API stays as Claude's Discretion with defaults documented. Run `/gsd-plan-phase 3` to research + plan the 3 plans (03-01 scaffolding → 03-02 queries || 03-03 predictability modeling).
+Status: Phase 2 COMPLETE; Phase 3 discuss-phase COMPLETE (commit 931b062). 13 implementation decisions (D-01..D-13) locked in `.planning/phases/03-analytical-layer-sql-python/03-CONTEXT.md`. Highlights: H/log(k) headline + KL secondary with Spearman ρ ≥ 0.85 validation gate; blitz boolean (n_blitzers > 4) as k=2 index input; per-team-per-situation matrix + aggregate scalar both shipped; (1 − H/log(k)) × 100 mapping; PA cross-cutting on S1 as the STAT-06 chi-square + odds ratio + Wilson CI; PI leaderboard with-vs-without competitive_plays as the STAT-08 sensitivity check.
+Last activity: 2026-04-30 — Phase 3 discuss-phase complete. 1 commit landed (931b062 docs(03): capture phase context). 03-CONTEXT.md (448 lines) and 03-DISCUSSION-LOG.md committed. Phase 2 verifier PASS at commit 0f39d50 still authoritative as the data-layer foundation.
 
 Progress: [█████░░░░░] 50%
 
@@ -64,6 +64,7 @@ Recent decisions affecting current work:
 - **SHIP-08 filed** (post-Phase-1 cleanup): placeholder ship-guard requirement — `! grep -qE '<[A-Z_]{4,}>' README.md` and same for FINDINGS.md must hold before push. Enforced as a step in the SHIP-01 GitHub Actions workflow. Phase 4 count went from 20 → 21; total v1 reqs 55 → 56.
 - **D-11 Phase 2 calibration: competitive_plays universe is 105,556 (not 140,606)** (Plan 02-02 end-to-end build, commit d680e09). Phase 1's 140,606 figure was measured pre-wp-filter (only `play_type IN ('pass','run')` applied). The locked D-04 predicate stack (wp 0.05-0.95 + qtr<=4 + end-of-half hurry-up exclusion) trims ~25% of competitive plays. View body in `schema/03_views.sql` is byte-exact to CONTEXT D-04. Phase 3 must reference 105,556 as the competitive universe — N≥30 / N≥100 sample-size discipline still has ample headroom (S1 3rd-and-long alone returns N=9,925).
 - **D-12 Phase 2 calibration: match_rate semantic in build_db.py is pbp-play-type-coverage, not FTN/pbp join coverage** (Plan 02-02, commit 884fde8). With `pbp.merge(ftn, how='left')`, `joined['play_type'].notna().mean()` is the rate of non-null play_type on the pbp side (NaN for kickoffs / no_play / etc.) — observed 0.9705. Phase 1's 0.9999 was measured the OTHER direction (`ftn.merge(pbp)`). Both exceed the 0.95 floor; CONTEXT specifics explicitly mandated this exact formula. Phase 3 won't quote match_rate, but any future build_db maintainer needs to know the assertion does NOT verify FTN coverage of pbp — for that, query `(SELECT COUNT(*) FROM plays p LEFT JOIN ftn_play f USING (game_id, play_id) WHERE f.game_id IS NULL) / COUNT(plays)`. Flagged for v2 follow-up.
+- **Phase 3 D-01..D-13 locked** (discuss-phase, commit 931b062): Predictability Index = H/log(k) headline + KL secondary with **Spearman ρ ≥ 0.85** validation gate (≥ = sensitivity check, < = substantive finding); blitz boolean (`n_blitzers > 4`) on `play_type='pass'` as the k=2 input dimension; both per-team-per-situation matrix (FINDINGS appendix) AND aggregate scalar (hero chart) shipped; `(1 − H/log(k)) × 100` mapping (high = predictable); sample-size-weighted aggregation with **min-N=30 dropout gate** (cells below floor are excluded, not down-weighted); PA ignored at index level (stays as Phase 1 D-07 stratifier for chi-square + narrative). 8-query slate hybrid path: 3 renamings (QUERY-02 `_by_situation`, QUERY-04 `_by_blitz`, QUERY-08 `_trend_by_season`); structured 6-section `.sql` header docblock locked (Question / Filter / Result shape / Hypothesis / Caveats / N expected). STAT-06 chi-square = **PA cross-cutting on S1** (blitz × is_play_action 2×2 on 3rd-and-long pass plays, league-aggregate scope, **odds ratio + Wilson 95% CI**, no Cramér's V). STAT-08 sensitivity = **Predictability Index leaderboard** recomputed with vs without `competitive_plays` (rank delta + Spearman ρ reported). `_common.py` API stays as Claude's Discretion with defaults documented in 03-CONTEXT.md.
 
 ### Pending Todos
 
@@ -89,6 +90,6 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 
 ## Session Continuity
 
-Last session: 2026-04-29
-Stopped at: Phase 2 execute-phase complete. Wave 1 (02-01 schema, 4 commits) and Wave 2 (02-02 ETL, 6 commits) landed atomically; gsd-verifier returned PASS at commit 0f39d50. `data/nfl_defensive_tendencies.db` is regenerable from a clean state in 36s cold / 9s warm. Two calibration findings (D-11 competitive universe = 105,556; D-12 match_rate semantic) recorded above for Phase 3 ingestion. **Phase 2 fully closed; data layer is the foundation Phase 3 reads from.**
-Resume file: `.planning/phases/02-data-layer-etl-sqlite-schema/02-VERIFICATION.md`. Run `/gsd-discuss-phase 3` to begin the analytical layer (8 SQL files + 3 notebooks + FINDINGS.md memo).
+Last session: 2026-04-30
+Stopped at: Phase 3 discuss-phase complete. 03-CONTEXT.md (448 lines, 13 implementation decisions D-01..D-13) and 03-DISCUSSION-LOG.md committed at 931b062. Three gray areas discussed: Predictability Index design (6 sub-decisions), 8-query slate (5 sub-decisions including 3 filename renamings), chi-square + sensitivity targets (5 sub-decisions). `_common.py` helper API explicitly skipped by user; defaults documented under Claude's Discretion. **Phase 3 ready to plan; data layer (Phase 2) verifier PASS at 0f39d50 still authoritative.**
+Resume file: `.planning/phases/03-analytical-layer-sql-python/03-CONTEXT.md`. Run `/gsd-plan-phase 3` to research + plan the 3 plans (03-01 scaffolding → 03-02 queries || 03-03 predictability modeling).
