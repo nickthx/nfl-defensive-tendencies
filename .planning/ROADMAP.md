@@ -85,15 +85,14 @@ Plans:
   3. At least one chi-square test on a pre-registered situation from `docs/analysis-plan.md` reports test statistic, effect size, and a Wilson 95% CI on the proportion (STAT-06).
   4. `analysis/_common.py` exposes `SEED=42`, a SQLite connection helper, and `min_n_filter()`; `min_n_filter` is applied to every analytical claim (N≥30 baseline, N≥100 for "extreme", N≥15 only with explicit narrative flag) (STAT-01, STAT-07).
   5. At least one sensitivity check exists — same headline finding computed with vs without the `competitive_plays` filter — with both numbers documented in the notebook (STAT-08).
-**Plans**: TBD (likely 3)
+**Plans:** 3 plans
 
 Plans:
-- [ ] 03-01: Python analytical scaffolding (STAT-01, STAT-02, STAT-03) — `_common.py`, `_style.py`, `01_exploratory.ipynb` (descriptive stats + sample-size profiling, flags cells <N=30)
-- [ ] 03-02: SQL Analysis Layer (QUERY-01..09) — 8 query files with documented headers, all referencing `competitive_plays`
-- [ ] 03-03: Predictability Modeling (STAT-04, STAT-05, STAT-06, STAT-07, STAT-08) — `02_predictability_modeling.ipynb` with normalization in cell 1, chi-square + effect size + Wilson CI on a pre-registered situation, sensitivity check, `min_n_filter` enforcement
+- [ ] 03-01-PLAN.md — Python analytical scaffolding (STAT-01, STAT-02, STAT-03) — `_common.py`, `_style.py`, `01_exploratory.ipynb` (descriptive stats + sample-size profiling, flags cells <N=30)
+- [ ] 03-02-PLAN.md — SQL Analysis Layer (QUERY-01..09) — 8 query files with documented headers, all referencing `competitive_plays`
+- [ ] 03-03-PLAN.md — Predictability Modeling (STAT-04, STAT-05, STAT-06, STAT-07, STAT-08) — `02_predictability_modeling.ipynb` with normalization in cell 1, chi-square + effect size + Wilson CI on a pre-registered situation, sensitivity check, `min_n_filter` enforcement
 
 **In-phase parallelism:** 03-01 (scaffolding) is the serial **prerequisite** — `_common.py`, `_style.py`, and the exploratory notebook must exist before 03-02 and 03-03 can import from them. After 03-01 completes, **03-02 (queries) and 03-03 (predictability modeling) run in parallel** — they read from the same SQLite tables but produce independent artifacts. Within 03-02, all 8 query files are independent and parallel-writable; QUERY-09 (cross-cutting compliance check on header docs / `competitive_plays` references) is the final serial verification. Within 03-03, STAT-04 (normalization scheme — FIRST cell) gates STAT-05/STAT-06/STAT-07/STAT-08; once locked, the chi-square (STAT-06) and sensitivity check (STAT-08) can run in parallel.
-**Plans**: TBD
 **UI hint**: no
 
 ---
