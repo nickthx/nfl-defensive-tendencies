@@ -260,7 +260,7 @@ import seaborn as sns
 import matplotlib.pyplot as plt
 from pathlib import Path
 
-SEASONS = [2022, 2023, 2024]
+SEASONS = [2022, 2023, 2024, 2025]
 AUDIT_DIR = Path("../audit")
 AUDIT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -313,7 +313,7 @@ candidate_cols = ['n_blitzers', 'n_pass_rushers', 'is_play_action', 'is_screen_p
 
 **Constraint applies (PITFALLS.md Pitfall #4 lines 89-110):** `n_blitzers` and `n_pass_rushers` are populated only on pass-context plays. The NaN rate for these columns on `play_type='run'` will be ~100% — that is expected, not a data-quality issue. Document this expectation in the notebook prose.
 
-**Constraint applies (PITFALLS.md Pitfall #17 lines 419-441):** assert on row counts post-pull (`assert len(ftn) > 100_000` for 3 seasons) to catch silent CDN failures.
+**Constraint applies (PITFALLS.md Pitfall #17 lines 419-441):** assert on row counts post-pull (`assert len(ftn) > 130_000` for 4 seasons; the locked scope is 2022-2025 per PROJECT.md D-10) to catch silent CDN failures.
 
 **Constraint applies (CLAUDE.md "File-Organization Rules"):** notebook lives at `analysis/00_data_audit.ipynb`. Outputs cleared before commit (`jupyter nbconvert --clear-output --inplace`). Notebook stays in repo as recruiter-visible artifact (FEATURES.md P2: "shows pivot reasoning visibly").
 

@@ -12,8 +12,8 @@
 - **The SPEC's headline framing — "Cover 0/1/2/3/4/6 + man/zone tendencies" — is unanswerable from public data.** The nflverse-distributed FTN subset is 28 columns and contains zero coverage labels. The full Cover-0–6 / man-zone taxonomy is part of FTN's paid product. The project pivots to broader **defensive tendencies** using the available FTN dimensions: `n_blitzers`, `n_pass_rushers`, `is_play_action`, `is_screen_pass`, `is_rpo`, `qb_location`, `n_offense_backfield`, `starting_hash`. Repo name and SPEC title update accordingly.
 - **`nfl_data_py==0.3.3` is LOCKED.** Library is archived upstream (2025-09-25) and recommends `nflreadpy`. The user has accepted the archived-package risk for v1 in exchange for SPEC-literal compatibility and faster ship time. `nflreadpy` migration is **considered and rejected for v1**, documented as a "Future Work" line in the README.
 - **Python 3.11 + `numpy<2` is non-negotiable** because `nfl_data_py` 0.3.x references `np.float_` (removed in NumPy 2) and fails to install on Python 3.13 (open issue #122 will never be patched).
-- **The SQLite database WILL exceed GitHub's 100 MiB limit** (estimated 200–400 MB for 3 seasons). It MUST be gitignored. Recruiters regenerate via `python -m etl.run` on first clone (~2–5 min).
-- **Phase 1 is pivot calibration, not exploration.** It measures NaN rates per FTN defensive column for 2022–2024, picks the 3–4 strongest dimensions to anchor analysis, and locks the public repo name.
+- **The SQLite database WILL exceed GitHub's 100 MiB limit** (estimated 250–500 MB for 4 seasons). It MUST be gitignored. Recruiters regenerate via `python -m etl.run` on first clone (~2–5 min).
+- **Phase 1 is pivot calibration, not exploration.** It measures NaN rates per FTN defensive column for 2022–2025, picks the 3–4 strongest dimensions to anchor analysis, and locks the public repo name.
 - **The README is the project.** Recruiters spend 30–90 seconds before bouncing. Hand-written voice (no AI-template emoji-section boilerplate), one hero PNG above the fold, and 3–4 stat-first bullet findings make or break the signal. Memo style, not tutorial, not academic.
 - **The entropy-based predictability score is the "wow piece" — but it is broken without normalization.** Raw Shannon entropy is bounded by `log(k)`; teams with different observed-category counts get incomparable scores. Normalization (`H/log(k)` or KL-from-baseline) is the first cell of the modeling notebook, not an afterthought.
 
@@ -38,7 +38,7 @@ The four researchers diverged on a few load-bearing decisions. The user has lock
 | **`nfl_data_py` vs `nflreadpy`** | Recommended `nflreadpy` (Path B) — archival is a recruiter red flag | Acknowledged archival but recommended staying on `nfl_data_py==0.3.3` — `nflreadpy` is v0.1.5 and "experimental" by its own authors | **`nfl_data_py==0.3.3` LOCKED** | User accepts the archived-package risk for v1; SPEC-literal API; faster to ship. Documented as a Known Issue in README, with a one-paragraph "v2 migration path" reference. |
 | **Default `pandas` pin range** | `>=2.2,<2.4` (forward-leaning, runs on the latest "safe" pre-3.0) | `==2.1.4` (matches the version known-good against `nfl_data_py` 0.3.3) | **`pandas>=2.1,<2.3`** | Compromise: lower bound matches Architecture (tested-with-nfl_data_py); upper bound stays under the `pandas` 2.3 deprecation noise. Pin tight in v1; loosen only if Phase 1 install testing demands it. |
 | **Notebook reproducibility CI** | Lint + import smoke; explicitly NOT full-notebook execution | Optional — minimal CI is justified; full nbexecute is over-engineering | **Lint + import smoke ONLY** | Both researchers agree on the floor. Skip notebook-execute CI (pulls 150 MB on every run, flaky). Manual `Restart & Run All` before commit is enforced by Phase 5 ship checklist. |
-| **DB commit policy** | Did not address directly | "Conditional commit if ≤25 MB after VACUUM" | **`.db` ALWAYS gitignored (LOCKED).** | Estimated 200–400 MB for 3 seasons; will exceed GitHub's 100 MiB hard limit. ETL regenerates in ~2–5 min on first clone. README documents this. |
+| **DB commit policy** | Did not address directly | "Conditional commit if ≤25 MB after VACUUM" | **`.db` ALWAYS gitignored (LOCKED).** | Estimated 250–500 MB for 4 seasons (2022-2025); will exceed GitHub's 100 MiB hard limit. ETL regenerates in ~2–5 min on first clone. README documents this. |
 | **`pyproject.toml` vs `requirements.txt`** | Both — `requirements.txt` for install (recruiter muscle memory), `pyproject.toml` only for `[tool.ruff]` config | Did not address | **Adopt Stack's recommendation** | Recruiters expect `pip install -r requirements.txt`. `pyproject.toml` exists but only houses the linter config. |
 
 ---
@@ -362,10 +362,10 @@ User has indicated parallel execution preference. Within phases, parallelism is 
 
 Phase 1's audit notebook + `docs/ftn-schema-audit.md` deliverable must close these. They are listed here so the roadmapper can scope Phase 1 explicitly.
 
-1. What is the exact column list of `nfl.import_ftn_data([2022, 2023, 2024])` for these seasons? Confirm the 28-column inventory from nflreadr docs matches the live frame. Document any seasonal differences.
+1. What is the exact column list of `nfl.import_ftn_data([2022, 2023, 2024, 2025])` for these seasons? Confirm the 28-column inventory from nflreadr docs matches the live frame. Document any seasonal differences.
 2. What is the per-column NaN rate, broken down by `play_type` (`pass`, `run`, `qb_kneel`, `qb_spike`, `no_play`)? This goes in `audit/ftn_null_profile.csv`. Confirm `n_blitzers` and `n_pass_rushers` are populated only on pass-context plays.
 3. Which 3–4 defensive dimensions become the analysis anchors? Defensible choice from the available 8 (`n_blitzers`, `n_pass_rushers`, `is_play_action`, `is_screen_pass`, `is_rpo`, `qb_location`, `n_offense_backfield`, `starting_hash`). The choice is downstream of the NaN profile (a column with 60%+ NaN on pass plays is unusable as an anchor).
-4. Does FTN row-count match pbp row-count for 2022–2024? Architecture assumes 1:1 join; if FTN charts a subset, the join becomes 1:0..1 and `ftn_play` becomes a LEFT JOIN with documented match rate.
+4. Does FTN row-count match pbp row-count for 2022–2025? Architecture assumes 1:1 join; if FTN charts a subset, the join becomes 1:0..1 and `ftn_play` becomes a LEFT JOIN with documented match rate.
 5. Does `nfl_data_py==0.3.3` install cleanly on Python 3.11 in 2026? Pre-flight before Phase 2. If broken, address before ETL design (escalate to user).
 6. What is the locked public repo name? Default: `nfl-defensive-tendencies`.
 7. What are the 3–5 pre-registered situations the analysis plan commits to? Lock in `docs/analysis-plan.md` BEFORE Phase 3.
@@ -379,7 +379,7 @@ Phase 1's audit notebook + `docs/ftn-schema-audit.md` deliverable must close the
 |------|------------|-------|
 | Stack | HIGH | All package versions verified against PyPI 2026-04-29; `nfl_data_py==0.3.3` is locked by user; pandas/numpy compatibility is forced by `np.float_` constraint. |
 | Features | HIGH | Recruiter-signal patterns converge across 8+ 2025–2026 sources; AI-template anti-pattern is explicitly cited in multiple hiring-manager guides. |
-| Architecture | HIGH | Three-tier (parquet → SQLite → notebooks) is standard for tabular analytics portfolios. MEDIUM on row-volume estimates (~141k plays for 3 seasons) — Phase 1 verifies. HIGH on the FTN-coverage-labels-absence finding. |
+| Architecture | HIGH | Three-tier (parquet → SQLite → notebooks) is standard for tabular analytics portfolios. HIGH on row-volume estimates (~185k plays for 4 seasons, verified 2026-04-29). HIGH on the FTN-coverage-labels-absence finding. |
 | Pitfalls | HIGH | All 22 pitfalls are sourced — most via nflverse GitHub issues and nflfastR documentation. MEDIUM only on FTN per-column NaN rates (rates not published; Phase 1 measures). |
 
 **Overall confidence:** HIGH. The project's biggest uncertainty (FTN schema) is itself a Phase 1 deliverable.

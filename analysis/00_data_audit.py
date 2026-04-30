@@ -17,8 +17,8 @@
 # # FTN Pivot Calibration Audit
 #
 # This notebook is the Phase 1 deliverable that closes the eight Phase-1 open
-# questions in `.planning/research/SUMMARY.md`. It pulls the 28-column FTN
-# charting subset distributed via nflverse for 2022-2024, joins it to nflfastR
+# questions in `.planning/research/SUMMARY.md`. It pulls the 29-column FTN
+# charting subset distributed via nflverse for 2022-2025, joins it to nflfastR
 # play-by-play on the canonical play key, measures per-column NaN rates by
 # `play_type`, and applies the D-02 30%-NaN cutoff to the eight candidate
 # defensive dimensions named in `.planning/phases/01-foundation-ftn-pivot-calibration/01-CONTEXT.md`.
@@ -30,14 +30,14 @@
 # Outputs are cleared before commit per `CLAUDE.md` File-Organization Rules.
 
 # %%
-import nfl_data_py as nfl
-import pandas as pd
-import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 from pathlib import Path
 
-SEASONS = [2022, 2023, 2024]
+import matplotlib.pyplot as plt
+import nfl_data_py as nfl
+import numpy as np
+import seaborn as sns
+
+SEASONS = [2022, 2023, 2024, 2025]
 AUDIT_DIR = Path("../audit")
 AUDIT_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -52,7 +52,7 @@ AUDIT_DIR.mkdir(parents=True, exist_ok=True)
 ftn = nfl.import_ftn_data(SEASONS)
 print(f"FTN frame: {len(ftn):,} rows x {len(ftn.columns)} columns")
 print("Columns:", ftn.columns.tolist())
-assert len(ftn) > 100_000, f"FTN pull returned {len(ftn)} rows; expected >100k for 3 seasons"
+assert len(ftn) > 130_000, f"FTN pull returned {len(ftn)} rows; expected >130k for 4 seasons"
 
 # %% [markdown]
 # ## Cell 3 - Pull pbp subset (for play_type lookup)
@@ -114,7 +114,7 @@ print(null_profile)
 fig, ax = plt.subplots(figsize=(10, 8))
 sns.heatmap(null_profile, annot=True, cmap='Reds', vmin=0, vmax=1, ax=ax,
             cbar_kws={'label': 'NaN rate'})
-ax.set_title("FTN per-column NaN rate by play_type, 2022-2024")
+ax.set_title("FTN per-column NaN rate by play_type, 2022-2025")
 fig.tight_layout()
 plt.show()
 

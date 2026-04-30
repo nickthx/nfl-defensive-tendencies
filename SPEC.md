@@ -24,11 +24,11 @@ This is a **public GitHub portfolio piece for entry-level data-analyst job appli
 1. **FTN charting** via `nfl_data_py.import_ftn_data(years)` — manually charted play tags. **Public columns confirmed do NOT include Cover 0/1/2/3/4/6 or man/zone labels** (those are part of FTN's paid product). Available defensive / play-context columns include `n_blitzers`, `n_pass_rushers`, `is_play_action`, `is_screen_pass`, `is_rpo`, `qb_location`, `n_offense_backfield`, `starting_hash`. Phase 1 will profile NaN rates and pick 3–4 dimensions to anchor analysis.
 2. **nflfastR play-by-play** via `nfl_data_py.import_pbp_data(years)` — every regular-season play with EPA, win probability, situational context (down, distance, field position, score, time, play_type), and outcomes. Joinable to FTN on `nflverse_game_id` + `nflverse_play_id`.
 
-**Seasons in scope:** 2022, 2023, 2024 (regular season). Estimated combined size after ETL: ~140k plays, SQLite ~200–400 MB.
+**Seasons in scope:** 2022, 2023, 2024, 2025 (regular season + playoffs through Super Bowl LX). Estimated combined size after ETL: ~185k plays, SQLite ~250–500 MB.
 
 ## Tech Stack (pinned)
 - **Language:** Python 3.11 (cap; `nfl-data-py` install fails on 3.13)
-- **Core libs:** `nfl-data-py==0.3.3` (archived upstream — accepted risk for SPEC-literal compatibility), `numpy<2.0` (forced by `nfl-data-py` referencing `np.float_`), `pandas>=2.2,<2.4`
+- **Core libs:** `nfl-data-py==0.3.3` (archived upstream — accepted risk for SPEC-literal compatibility), `numpy<2.0` (forced by `nfl-data-py` referencing `np.float_`), `pandas>=2.1,<2.3`
 - **Database:** SQLite (single file, zero-setup, no Postgres / DuckDB / Docker / cloud DB)
 - **Notebooks:** Jupyter (jupyterlab or notebook — recruiter compat over preference)
 - **Visualization:** `matplotlib` + `seaborn` for static charts embedded in notebooks and FINDINGS.md
@@ -91,7 +91,7 @@ Each becomes a SQL query, Python analysis, or both. Anchored on the four dimensi
 5. **Predictability score:** Build a single 0-100 Predictability Index per team, computed *conditional on situation* using `H/log(k)` over fixed anchor support OR KL-from-league-baseline (chosen in Phase 3 / STAT-04). Rank all 32 teams.
 6. **Play-action stratification (D-07):** Within each pre-registered situation, how does each team's blitz rate differ between `is_play_action=true` and `is_play_action=false` pass plays? Reported only when both stratum sizes meet N>=30. Cross-cutting modifier across the 4 situations rather than its own slate item.
 7. **Drift over time:** Do coordinators' anchor-dimension rates (blitz rate, pass-rusher distribution, `n_offense_backfield` mix) drift week-over-week within a season, or stay sticky? Measured as week-to-week rate variance with N>=30 per team-week.
-8. **Exploitable matchups (firewall):** Within the 4 pre-registered situations only, identify the team-situation combos where the chosen anchor rate is "extreme" (>75% one look) with N>=100 across 2022-2024. Anything outside the 4-situation slate stays exploratory and is not a headline finding.
+8. **Exploitable matchups (firewall):** Within the 4 pre-registered situations only, identify the team-situation combos where the chosen anchor rate is "extreme" (>75% one look) with N>=100 across 2022-2025. Anything outside the 4-situation slate stays exploratory and is not a headline finding.
 
 ## Technical Requirements
 - **SQL queries** must include: window functions, CTEs, joins across both data sources, situational filtering

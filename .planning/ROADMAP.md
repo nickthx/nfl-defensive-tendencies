@@ -38,7 +38,7 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
 **Requirements**: BOOT-01, BOOT-02, BOOT-03, BOOT-04, BOOT-05, BOOT-06, BOOT-07, AUDIT-01, AUDIT-02, AUDIT-03, AUDIT-04, AUDIT-05, AUDIT-06, AUDIT-07
 **Success Criteria** (what must be TRUE):
   1. A fresh Python 3.11 venv installs `requirements.txt` cleanly and imports `nfl_data_py` without error (BOOT-02, BOOT-05, BOOT-07).
-  2. `audit/ftn_null_profile.csv` exists and shows per-column NaN rate by `play_type` for FTN columns across 2022–2024 (AUDIT-01, AUDIT-02).
+  2. `audit/ftn_null_profile.csv` exists and shows per-column NaN rate by `play_type` for FTN columns across 2022–2025 (AUDIT-01, AUDIT-02).
   3. `docs/ftn-schema-audit.md` names the 3–4 chosen anchor defensive dimensions with a defensible, NaN-rate-aware rationale (AUDIT-03).
   4. `docs/analysis-plan.md` pre-registers 3–5 situations the FINDINGS.md memo will claim findings on (AUDIT-04).
   5. The public repo name is locked in writing and the README hook is rewritten in plain English to match the post-pivot framing (AUDIT-05, AUDIT-06, AUDIT-07).

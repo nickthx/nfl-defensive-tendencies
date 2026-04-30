@@ -104,7 +104,7 @@ The remainder of this document gives a full version-pinned stack for **both path
 For a portfolio project where readability beats performance:
 
 - **`sqlite3` stdlib for queries** — recruiter opens `etl/load_pbp.py`, sees `conn = sqlite3.connect(...)`, instantly grasps it. No magic.
-- **`pandas.to_sql(con=conn, if_exists='replace', method='multi', chunksize=5000)` for bulk inserts** — ~270 games × 32 teams × 3 seasons of plays is ~50k–150k rows; chunked `to_sql` handles it in single-digit seconds and is one line.
+- **`pandas.to_sql(con=conn, if_exists='replace', method='multi', chunksize=5000)` for bulk inserts** — ~270 games × 32 teams × 4 seasons of plays is ~140k–200k rows; chunked `to_sql` handles it in single-digit seconds and is one line.
 - **`sqlalchemy`: skip.** It's not needed and adds ~3 imports of "why is this here" for the recruiter. Pandas itself supports `to_sql` via a raw `sqlite3` connection (with a known FutureWarning on non-SQLAlchemy connections in pandas 2.x — silenceable, harmless, will be a deprecation in pandas 3.0; another reason to pin to 2.3.x). [CITED: pandas docs `to_sql`]
 - **One exception:** if you decide to write integration tests that verify schema, `sqlalchemy.inspect()` is genuinely cleaner than raw `PRAGMA table_info`. Decide at Phase 2.
 
@@ -309,8 +309,8 @@ The Path A pin file requires a `numpy<2.0` cap that will look strange to a recru
 
 The following questions MUST be resolved by Phase 1 before ETL design — this STACK research deliberately did not pretend to know the answers:
 
-1. **Run `nflreadpy.load_ftn_charting(seasons=[2022, 2023, 2024]).columns` — freeze the actual column list.** Specifically confirm whether any field carries Cover 0/1/2/3/4/6 or man/zone classification.
-2. If absent, **run `nflreadpy.load_participation(seasons=[2022, 2023, 2024])`** and confirm `defense_man_zone_type` and `defense_coverage_type` exist for those seasons (the data may stop at 2023 — NGS coverage data has had availability gaps).
+1. **Run `nflreadpy.load_ftn_charting(seasons=[2022, 2023, 2024, 2025]).columns` — freeze the actual column list.** Specifically confirm whether any field carries Cover 0/1/2/3/4/6 or man/zone classification.
+2. If absent, **run `nflreadpy.load_participation(seasons=[2022, 2023, 2024, 2025])`** and confirm `defense_man_zone_type` and `defense_coverage_type` exist for those seasons (the data may stop at 2023 — NGS coverage data has had availability gaps).
 3. **Validate `nflreadpy` actually fetches in <60s on first call and caches to disk** (confirms the "5 commands, 10 minutes" reproducibility budget).
 4. **Run `pip install -r requirements.txt` from a fresh venv on the target Python (3.11.x or 3.12.x)** and confirm zero errors. Both Path A and Path B should be tried before final commit.
 5. **Decide Path A vs Path B explicitly, with the SPEC owner.** This stack research does not have authority to make that call unilaterally; it can only flag it.

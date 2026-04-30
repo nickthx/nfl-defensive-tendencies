@@ -190,7 +190,7 @@ Phase 2 (view layer enforces the filter).
 ### Pitfall 8: Sample-size collapse — the "75% on 3rd-and-12 from their own 5" with N=4 problem
 
 **What goes wrong:**
-3 seasons × 32 teams × down × distance bucket × field zone × score state collapses cell counts toward zero exponentially fast. An eye-catching "Team X plays Cover 3 87.5% of the time on 3rd-and-12 from inside their own 10" can be N=8 plays. Publishing that as a finding is a recruiter-killer — anyone who has worked with NFL data will spot it instantly.
+4 seasons × 32 teams × down × distance bucket × field zone × score state collapses cell counts toward zero exponentially fast. An eye-catching "Team X plays Cover 3 87.5% of the time on 3rd-and-12 from inside their own 10" can be N=8 plays. Publishing that as a finding is a recruiter-killer — anyone who has worked with NFL data will spot it instantly.
 
 **Why it happens:**
 The **most interesting** tendency claims are exactly the ones with the smallest cells (rare situations are rare). The discovery process pulls the analyst toward extremes that have no statistical support.
@@ -317,7 +317,7 @@ The audience is non-football data-analyst recruiters. A README that opens "We an
 NFL analytics has dense in-group vocabulary. Authors steeped in the domain forget that "Cover 3" needs a one-line gloss for a reader whose football knowledge stops at "the offense throws to the receiver".
 
 **How to avoid:**
-- README's hook is **one plain-English sentence**: *"Which NFL defenses are predictable in known situations, and which aren't? This project analyzes 3 seasons of charted data to answer that, ranks 32 teams, and highlights 3 exploitable matchups."* No jargon.
+- README's hook is **one plain-English sentence**: *"Which NFL defenses are predictable in known situations, and which aren't? This project analyzes 4 seasons of charted data to answer that, ranks 32 teams, and highlights 3 exploitable matchups."* No jargon.
 - A `## Glossary` section in the README defines every domain term used elsewhere in 1 line each (down & distance, EPA, blitz rate, predictability index).
 - FINDINGS.md leads with the takeaway in plain English, then the chart, then the methodology in collapsed/footnoted form.
 - Hero chart in the README is **labeled for a non-fan**: y-axis says "Predictability Index (0=random, 100=fully predictable)", not "Normalized situational entropy (nats)".
@@ -335,10 +335,10 @@ Phase 4 (FINDINGS.md drafting); Phase 5 (README polish + non-football reader tes
 ### Pitfall 14: Big committed `.db` file blowing up the repo size
 
 **What goes wrong:**
-SQLite database with FTN + pbp for 3 seasons is roughly 200–400 MB depending on which columns are kept. GitHub blocks files > 100 MiB outright; files > 50 MiB trigger a warning. `git push` either fails with "this exceeds GitHub's file size limit" or the repo balloons past 1 GB on the first clone, killing the "recruiter clone-and-run in 90 seconds" promise. [VERIFIED: GitHub 100 MiB hard limit; 50 MiB warning per GitHub Docs.]
+SQLite database with FTN + pbp for 4 seasons is roughly 250–500 MB depending on which columns are kept. GitHub blocks files > 100 MiB outright; files > 50 MiB trigger a warning. `git push` either fails with "this exceeds GitHub's file size limit" or the repo balloons past 1 GB on the first clone, killing the "recruiter clone-and-run in 90 seconds" promise. [VERIFIED: GitHub 100 MiB hard limit; 50 MiB warning per GitHub Docs.]
 
 **Why it happens:**
-The SPEC says the .db is "checked in if small". "Small" is undefined. SQLite from 3 seasons of pbp + FTN is not small.
+The SPEC says the .db is "checked in if small". "Small" is undefined. SQLite from 4 seasons of pbp + FTN is not small.
 
 **How to avoid:**
 - `.db` is **gitignored by default**. The ETL pipeline generates it from scratch in <2 minutes on a stock laptop.
@@ -425,8 +425,8 @@ nflverse release URLs occasionally move. The package retries silently on some en
 **How to avoid:**
 - ETL asserts on row counts post-pull:
   ```python
-  ftn = nfl.import_ftn_data([2022, 2023, 2024])
-  assert len(ftn) > 100_000, f"FTN pull returned {len(ftn)} rows — expected >100k for 3 seasons. Check nflverse release status."
+  ftn = nfl.import_ftn_data([2022, 2023, 2024, 2025])
+  assert len(ftn) > 130_000, f"FTN pull returned {len(ftn)} rows — expected >130k for 4 seasons. Check nflverse release status."
   ```
 - Cache raw pulls as parquet to `data/raw/` (gitignored). On subsequent ETL runs, prefer cache; on cache miss, re-pull. The cache turns "ephemeral nflverse outage" into "you already have the data".
 - README documents: *"If `nfl_data_py.import_ftn_data` fails, check https://github.com/nflverse/nflverse-data/releases — the package follows the latest release."*
@@ -609,7 +609,7 @@ Phase 3 (notebooks); Phase 5 (reproducibility hash check).
 | Per-row pandas operations (`.apply` over a column) for situational binning | ETL goes from 30s to 5 min | Vectorize with `np.where` / `pd.cut` / `.assign` | Once the binning involves >3 columns |
 | Re-rendering all PNGs on every notebook run | "Run all" takes 5 min instead of 30s | Gate PNG saves behind `if SAVE_FIGURES: plt.savefig(...)`, default False; flip to True only for the ship-time render | Becomes painful around 20+ charts |
 
-For this project's scale (3 seasons, ~135k plays, ~30k FTN-charted), most of these are mild — but a recruiter on an old laptop is the explicit performance target, so all of them matter.
+For this project's scale (4 seasons, ~185k plays, ~30k FTN-charted), most of these are mild — but a recruiter on an old laptop is the explicit performance target, so all of them matter.
 
 ---
 
@@ -733,7 +733,7 @@ Phase numbering corresponds to the SPEC's project structure (Phase 1 audit → 2
 ### Tertiary (LOW confidence — flagged for validation)
 - FTN per-column NaN rates beyond the qualitative "expected NaN on non-pass plays for `n_blitzers` / `n_pass_rushers`" — not published; **must be measured in Phase 1 audit and recorded in `audit/ftn_null_profile.csv`**.
 - FTN inter-rater agreement metrics on subjective fields (`is_play_action`, `is_rpo`) — not published by FTN for the nflverse subset; treated as ground truth with rounding caveat.
-- Exact .db file size from 3 seasons of joined data — estimated 200–400 MB based on column counts and row counts (~135k plays × ~50 retained columns); **must be measured in Phase 2 and reflected in the gitignore decision**.
+- Exact .db file size from 4 seasons of joined data — estimated 250–500 MB based on column counts and row counts (~185k plays × ~50 retained columns); **must be measured in Phase 2 and reflected in the gitignore decision**.
 
 ---
 

@@ -4,7 +4,7 @@ A public GitHub data-analytics portfolio piece for entry-level data-analyst job 
 
 ## Project at a Glance
 
-- **What:** Situational analysis of NFL defensive tendencies (blitz, pressure, play-action, personnel) using `nfl_data_py` (FTN charting + nflfastR play-by-play) for 2022–2024.
+- **What:** Situational analysis of NFL defensive tendencies (blitz, pressure, play-action, personnel) using `nfl_data_py` (FTN charting + nflfastR play-by-play) for 2022–2025 (four seasons through Super Bowl LX).
 - **Why:** Recruiter-visible portfolio piece. The recruiter must clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
 - **Audience:** Data-analyst recruiters and sports-analytics hiring managers — non-football-fluent. Memo style, not tutorial style.
 - **Working folder:** `nfl-coverage-tendencies` (kept for git history). **Public GitHub repo name** is locked at end of Phase 1 (likely `nfl-defensive-tendencies`).

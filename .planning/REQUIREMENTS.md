@@ -21,8 +21,8 @@ REQ-IDs are grouped by architectural layer. Phase mapping is filled in by the ro
 
 ### FTN Audit / Pivot Calibration
 
-- [x] **AUDIT-01**: `analysis/00_data_audit.ipynb` calls `nfl.import_ftn_data([2022, 2023, 2024])`, prints column inventory, computes per-column NaN rates by `play_type`
-- [x] **AUDIT-02**: `audit/ftn_null_profile.csv` lands NaN rates per FTN column × play_type for 2022–2024
+- [x] **AUDIT-01**: `analysis/00_data_audit.ipynb` calls `nfl.import_ftn_data([2022, 2023, 2024, 2025])`, prints column inventory, computes per-column NaN rates by `play_type`
+- [x] **AUDIT-02**: `audit/ftn_null_profile.csv` lands NaN rates per FTN column × play_type for 2022–2025
 - [x] **AUDIT-03**: `docs/ftn-schema-audit.md` written narrative confirming the public-FTN reality and naming the 3–4 anchor dimensions chosen
 - [x] **AUDIT-04**: `docs/analysis-plan.md` pre-registers 3–5 situations the FINDINGS.md memo will claim findings on (multiple-comparisons discipline)
 - [x] **AUDIT-05**: Public GitHub repo name locked (default: `nfl-defensive-tendencies`)
@@ -95,6 +95,7 @@ REQ-IDs are grouped by architectural layer. Phase mapping is filled in by the ro
 - [ ] **SHIP-05**: Repo pinned to Nick's GitHub profile via the MCP
 - [ ] **SHIP-06**: Commit history reviewed and clean (no `WIP`, no `asdf`); `du -sh .git/` < 50 MB
 - [ ] **SHIP-07**: Final push to `main` verified on a non-author browser session (link works, hero chart loads, glossary visible)
+- [ ] **SHIP-08**: No unfilled placeholder slots ship to the public repo — `README.md` and `findings/FINDINGS.md` must satisfy `! grep -qE '<[A-Z_]{4,}>' <file>` before push. Enforced as a step in the SHIP-01 GitHub Actions workflow so any literal `<UPPERCASE_PLACEHOLDER>` in a tracked README/FINDINGS file fails CI.
 
 ---
 
@@ -207,17 +208,18 @@ Populated by the roadmapper after `ROADMAP.md` is written. Each v1 requirement m
 | SHIP-05 | Phase 4 | Pending |
 | SHIP-06 | Phase 4 | Pending |
 | SHIP-07 | Phase 4 | Pending |
+| SHIP-08 | Phase 4 | Pending |
 
 **Coverage:**
-- v1 requirements: 55 total
-- Mapped to phases: 55 ✓
+- v1 requirements: 56 total
+- Mapped to phases: 56 ✓
 - Unmapped: 0
 
 **Phase distribution:**
 - Phase 1 (Foundation & FTN Pivot Calibration): 14 requirements (BOOT-01..07, AUDIT-01..07)
 - Phase 2 (Data Layer): 9 requirements (ETL-01..06, SCHEMA-01..03)
 - Phase 3 (Analytical Layer): 17 requirements (QUERY-01..09, STAT-01..08)
-- Phase 4 (Story & Ship): 20 requirements (VIZ-01..05, DOC-01..08, SHIP-01..07)
+- Phase 4 (Story & Ship): 21 requirements (VIZ-01..05, DOC-01..08, SHIP-01..08)
 
 ---
 

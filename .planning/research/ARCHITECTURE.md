@@ -431,12 +431,12 @@ Notes:
 
 ### Data Volume Estimates [VERIFIED partially — verify in Phase 1]
 
-| Dataset | Rows / season | 3 seasons | Notes |
-|---------|---------------|-----------|-------|
-| nflfastR pbp (regular season, all play types) | ~47,000 | ~141,000 | [VERIFIED: 2019 = 47,260 rows, sharpfootballanalysis / nflfastR articles] |
-| FTN charting (regular season, all plays) | ~47,000 | ~141,000 | [ASSUMED: FTN charts every play; row count should match pbp ±a few %; verify in Phase 1] |
-| `plays` table (post-filter to REG, ~30 cols) | — | ~141,000 | Estimated 30 MB in SQLite |
-| `ftn_play` table (~15 cols) | — | ~141,000 | Estimated 15 MB |
+| Dataset | Rows / season | 4 seasons (2022-2025) | Notes |
+|---------|---------------|-----------------------|-------|
+| nflfastR pbp (regular season + playoffs, all play types) | ~49,000 | ~197,000 | [VERIFIED 2026-04-29: 4-season pull = 197,362 rows] |
+| FTN charting (regular season + playoffs, all plays) | ~46,000 | ~185,000 | [VERIFIED 2026-04-29: 4-season pull = 185,215 rows] |
+| `plays` table (post-filter to REG, ~30 cols) | — | ~185,000 | Estimated 40 MB in SQLite |
+| `ftn_play` table (~15 cols) | — | ~185,000 | Estimated 20 MB |
 | `games` table | 272 | 816 | <100 KB |
 | **Total `nfl_coverage.db`** | — | — | **~50–80 MB estimated; verify in Phase 1** |
 
@@ -604,9 +604,9 @@ The CI workflow is itself a portfolio signal — it shows the author thinks abou
 
 This is a fixed-data, single-user portfolio piece. Traditional "scale" doesn't apply, but there are two real scaling vectors worth documenting:
 
-| Scale axis | At current size (3 seasons) | If extended (e.g. all of 2018+) |
+| Scale axis | At current size (4 seasons) | If extended (e.g. all of 2018+) |
 |-----------|------------------------------|----------------------------------|
-| Data volume | ~150k plays, ~80 MB DB | ~350k plays for 2018–2024, still <250 MB — SQLite handles it without changes |
+| Data volume | ~185k plays, ~110 MB DB | ~400k plays for 2018–2025, still <300 MB — SQLite handles it without changes |
 | Notebook iteration speed | <2 sec for any single query against indexed `plays` | Same, with the existing index strategy |
 | ETL re-pull time | ~3 min on warm cache, ~10 min cold | Linear scaling; raw cache mitigates |
 | Recruiter clone size | If `nfl_coverage.db` committed (≤25 MB), ~30 MB total repo | Force-gitignore the DB, require ETL run |
@@ -617,7 +617,7 @@ This is a fixed-data, single-user portfolio piece. Traditional "scale" doesn't a
 2. **Notebook memory** — pulling all plays into pandas at once if data grows >5x. Fix: SQL filters more aggressively before `read_sql`.
 3. **`nfl_data_py` deprecation catching up** — if a future Python release breaks nfl_data_py 0.3.3 entirely, migration to `nflreadpy` becomes mandatory. Fix: the parquet raw cache means existing data still works; only refresh would need migration.
 
-None of these are real concerns at the project's locked scope (3 seasons).
+None of these are real concerns at the project's locked scope (4 seasons, 2022-2025).
 
 ---
 
@@ -629,7 +629,7 @@ None of these are real concerns at the project's locked scope (3 seasons).
 **Do this instead:** Three modules (`load_pbp`, `load_ftn`, `build_db`) + an `etl/run.py` orchestrator. Each stage is independently runnable and idempotent.
 
 ### Anti-Pattern 2: "Notebook does ETL too"
-**What people do:** Notebook starts with `nfl.import_pbp_data([2022, 2023, 2024])`, then does analysis.
+**What people do:** Notebook starts with `nfl.import_pbp_data([2022, 2023, 2024, 2025])`, then does analysis.
 **Why it's wrong:** Notebook re-pulls 150 MB on every run; couples analysis to network; can't be reviewed without running.
 **Do this instead:** ETL writes to SQLite; notebooks read from SQLite. Strict one-way flow.
 

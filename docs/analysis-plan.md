@@ -34,12 +34,12 @@ public sports-analytics literature.
 **Hypotheses (falsifiable):**
 
 - H1: League-wide blitz rate (`n_blitzers > 4`) on 3rd-and-long exceeds 35%
-  over 2022-2024. **Falsified if** observed league-wide rate <= 35% with
-  N >= 1,000 (the threshold is met across 3 seasons of every team's
+  over 2022-2025. **Falsified if** observed league-wide rate <= 35% with
+  N >= 1,000 (the threshold is met across 4 seasons of every team's
   3rd-and-long pass plays; sample size is not the gate).
 
 - H2: At least 3 teams have a blitz rate > 50% on 3rd-and-long with N >= 100
-  per team across 2022-2024. **Falsified if** fewer than 3 teams meet both
+  per team across 2022-2025. **Falsified if** fewer than 3 teams meet both
   thresholds.
 
 ## Situation 2: Red zone
@@ -54,12 +54,12 @@ choices, a high-information situation for tendency analysis.
 
 - H1: League-wide pressure rate (`n_pass_rushers >= 5`) inside the 20
   differs from the league-wide pressure rate elsewhere by at least 5
-  percentage points (in either direction) over 2022-2024 with N >= 1,000
+  percentage points (in either direction) over 2022-2025 with N >= 1,000
   on each side of the comparison. **Falsified if** the absolute gap is
   < 5pp.
 
 - H2: At least 1 team's red-zone pressure rate is "extreme" (> 75% one
-  look) with N >= 100 across 2022-2024. **Falsified if** no team meets
+  look) with N >= 100 across 2022-2025. **Falsified if** no team meets
   both thresholds.
 
 ## Situation 3: 1st-and-10
@@ -74,7 +74,7 @@ compared.
 **Hypotheses (falsifiable):**
 
 - H1: League-wide pass rate on 1st-and-10 is between 50% and 60% over
-  2022-2024 (consistent with the public nflfastR EPA literature's
+  2022-2025 (consistent with the public nflfastR EPA literature's
   reported range with N >= 10,000). **Falsified if** observed rate is
   outside [50%, 60%].
 
@@ -100,7 +100,7 @@ making it the highest-signal situation for the predictability index.
   **Falsified if** sigma(S4) <= sigma(S3).
 
 - H2: At least 5 teams have N >= 100 plays on 2nd-and-medium across
-  2022-2024 with `n_offense_backfield` populated. **Falsified if** fewer
+  2022-2025 with `n_offense_backfield` populated. **Falsified if** fewer
   than 5 teams meet both thresholds.
 
 ## Cross-cutting Modifier: is_play_action

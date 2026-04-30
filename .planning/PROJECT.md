@@ -2,7 +2,7 @@
 
 ## What This Is
 
-A public, portfolio-grade data analytics project that examines how NFL defenses deploy scheme tendencies situationally — using `nfl-data-py==0.3.3` (FTN charting + nflfastR play-by-play) for the 2022–2024 seasons. Audience: data-analyst recruiters and sports-analytics teams reviewing entry-level applicants. The deliverable is a public GitHub repo with a reproducible Python+SQLite ETL, ~8 SQL analyses, Jupyter notebooks, and an analyst-memo-style FINDINGS.md.
+A public, portfolio-grade data analytics project that examines how NFL defenses deploy scheme tendencies situationally — using `nfl-data-py==0.3.3` (FTN charting + nflfastR play-by-play) for the 2022–2025 seasons (four full seasons including the 2025 regular season and playoffs through Super Bowl LX). Audience: data-analyst recruiters and sports-analytics teams reviewing entry-level applicants. The deliverable is a public GitHub repo with a reproducible Python+SQLite ETL, ~8 SQL analyses, Jupyter notebooks, and an analyst-memo-style FINDINGS.md.
 
 The original framing centered on coverage scheme labels (Cover 0/1/2/3/4/6, man/zone). Project research confirmed those labels are NOT in public FTN data — they are part of FTN's paid product. The project pivots to broader defensive tendencies (blitz rate, pass-rusher count, play-action response, screen rate, RPO usage, QB location, backfield personnel, hash starting position). Phase 1 picks the final 3–4 dimensions to anchor analysis.
 
@@ -22,7 +22,7 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 
 <!-- Hypotheses until shipped. Detailed REQ-IDs live in REQUIREMENTS.md after the requirements pass. -->
 
-- [ ] Phase 1 calibration: profile FTN NaN rates per defensive column for 2022–2024, pick 3–4 anchor dimensions, lock public repo name
+- [ ] Phase 1 calibration: profile FTN NaN rates per defensive column for 2022–2025, pick 3–4 anchor dimensions, lock public repo name
 - [ ] Reproducible ETL pipeline pulls FTN + nflfastR via `nfl-data-py==0.3.3`, caches parquet, lands SQLite (gitignored)
 - [ ] Lightly-normalized SQLite schema joining FTN to nflfastR on `nflverse_game_id` + `nflverse_play_id`
 - [ ] 8–10 SQL analysis queries answering the situational tendency questions (window fns, CTEs, joins)
@@ -51,7 +51,7 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 **Author profile:** This is one of Nick's portfolio pieces aimed at entry-level data-analyst roles, distinct from his Whitflow lead-gen automation work. Audience is non-football, non-domain recruiters — README and FINDINGS.md must convey value without assuming NFL knowledge.
 
 **Data shape (verified by project research):**
-- `nfl_data_py.import_ftn_data(years)` returns a 28-column FTN charting frame for 2022+. Defensive context is limited to `n_blitzers`, `n_pass_rushers`, `is_play_action`, `is_screen_pass`, `is_rpo`, `qb_location`, `n_offense_backfield`, `starting_hash`. **No Cover 0–6, no man/zone, no defenders-in-box columns** in the public dataset.
+- `nfl_data_py.import_ftn_data(years)` returns a 29-column FTN charting frame for 2022+ (the Phase 1 audit on 2026-04-29 surfaced one column — `n_defense_box` — beyond the 28 the original research enumerated). Defensive context is limited to `n_blitzers`, `n_pass_rushers`, `is_play_action`, `is_screen_pass`, `is_rpo`, `qb_location`, `n_offense_backfield`, `starting_hash`. **No Cover 0–6, no man/zone, no defenders-in-box-as-coverage-shell columns** in the public dataset.
 - `nfl_data_py.import_pbp_data(years)` returns the full nflfastR play-by-play (~47k plays/season) with EPA, win probability, situational context, and outcomes. Joinable to FTN on `nflverse_game_id` + `nflverse_play_id` (NOT `ftn_game_id` / `ftn_play_id`).
 - `nfl-data-py` itself was archived 2025-09-25; we pin `==0.3.3` and accept the risk for SPEC-literal compatibility.
 
@@ -94,6 +94,7 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 | Tiered sample-size discipline (N≥15 / 30 / 100) | Single threshold loses analytical nuance; tiered system surfaces "extreme" claims with proper rigor | — Pending |
 | Normalized Shannon entropy (H/log(k)) for predictability score | Raw entropy isn't comparable across different support sizes; normalization is the rigorous default | — Pending |
 | D-09: Public GitHub repo name | Locked to `nfl-defensive-tendencies` after Phase 1 audit confirmed the public-FTN pivot; `coverage` framing in original repo name no longer accurate. Working folder stays `nfl-coverage-tendencies` for git history continuity. | Locked 2026-04-29 |
+| D-10: Scope expanded from 2022–2024 to 2022–2025 | The 2025 NFL season completed February 2026 with Super Bowl LX. A pre-pivot data-quality check (`scratch/verify_2025.py`, 2026-04-29) confirmed: full 18-week regular season + 4-round playoffs present in FTN and pbp; no FTN columns added or removed; 4-season FTN↔pbp `validate='one_to_one'` match rate 0.9999 (vs 0.9998 for 3 seasons); all 8 candidate FTN columns re-validate against the 30% NaN cutoff at essentially zero NaN; 4-season totals 80,782 pass plays / 59,824 run plays / 140,606 competitive plays. Including 2025 adds current-season recency for recruiters without disturbing the locked anchor set. | Locked 2026-04-29 |
 
 ## Evolution
 
@@ -113,4 +114,4 @@ This document evolves at phase transitions and milestone boundaries.
 4. Update Context with current state
 
 ---
-*Last updated: 2026-04-29 after Phase 1 D-09 lock + pandas pin alignment*
+*Last updated: 2026-04-29 after Phase 1 D-09 lock, pandas pin alignment, and D-10 scope expansion to 2022-2025*

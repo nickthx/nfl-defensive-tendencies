@@ -30,6 +30,6 @@
     "working_name": "NFL Defensive Coverage Tendencies",
     "audience": "entry-level-data-analyst-recruiters",
     "data_sources": ["nfl_data_py.import_ftn_data", "nfl_data_py.import_pbp_data"],
-    "seasons": [2022, 2023, 2024]
+    "seasons": [2022, 2023, 2024, 2025]
   }
 }
