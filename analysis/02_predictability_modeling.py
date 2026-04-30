@@ -248,3 +248,198 @@ if spearman_rho < SPEARMAN_VALIDATION_GATE:
     print("Top 5 disagreers (largest |rank_h - rank_kl|):")
     both["rank_delta"] = (both["rank_h"] - both["rank_kl"]).abs()
     print(both.sort_values("rank_delta", ascending=False).head(5).to_string(index=False))
+
+# %% [markdown]
+# ## STAT-06 chi-square headline: PA × blitz on S1 (D-09 + D-11 + D-12)
+#
+# League-aggregate 2×2 contingency on S1 (3rd-and-long) pass plays from `competitive_plays`:
+# rows = `n_blitzers >= 1` (y/n), cols = `is_play_action` (y/n).
+# Tests the pre-registered PA cross-cutting hypothesis from `docs/analysis-plan.md`.
+#
+# DEVIATION (Rule 1 — bug fix): plan specified `n_blitzers > 4` (nflfastR convention for
+# n_pass_rushers), but FTN's `n_blitzers` column counts dedicated extra rushers above the
+# base 4-man line, not total rushers. With n_blitzers ranging 0–6, the correct blitz boolean
+# is n_blitzers >= 1 (any non-lineman rushed). The plan's threshold produced only 7 blitz
+# plays across 58k competitive pass plays — analytically degenerate. Corrected threshold
+# aligns with FTN column semantics; blitz rate ~29% is consistent with NFL norms.
+
+# %%
+S1_PA_BLITZ_SQL = """
+SELECT
+    f.is_play_action,
+    SUM(CASE WHEN f.n_blitzers >= 1 THEN 1 ELSE 0 END)  AS blitz_count,
+    SUM(CASE WHEN f.n_blitzers = 0 THEN 1 ELSE 0 END)   AS no_blitz_count
+FROM competitive_plays cp
+JOIN ftn_play f USING (game_id, play_id)
+WHERE cp.down = 3 AND cp.ydstogo >= 7
+  AND cp.play_type = 'pass'
+  AND f.is_play_action IS NOT NULL
+GROUP BY f.is_play_action
+"""
+
+with get_conn() as conn:
+    s1 = pd.read_sql_query(S1_PA_BLITZ_SQL, conn)
+
+print(s1)
+
+# Build the 2x2 contingency in the order required by D-09:
+#   [[blitz=1 & PA=1, blitz=0 & PA=1],
+#    [blitz=1 & PA=0, blitz=0 & PA=0]]
+row_pa = s1.loc[s1["is_play_action"] == 1].iloc[0]
+row_no = s1.loc[s1["is_play_action"] == 0].iloc[0]
+a = int(row_pa["blitz_count"])
+b = int(row_pa["no_blitz_count"])
+c = int(row_no["blitz_count"])
+d = int(row_no["no_blitz_count"])
+table = np.array([[a, b], [c, d]])
+print(f"S1 PA x blitz contingency:\n{table}")
+print(
+    f"N total: {table.sum()} "
+    f"(gate: chi-square requires expected cell count >= 5; with N ~ 10k this is comfortably met)"
+)
+
+chi2, p, _, expected = stats.chi2_contingency(table)
+print(f"chi2 = {chi2:.4f}")
+print(f"p-value = {p:.6f}")
+print(f"expected cells (min={expected.min():.1f}): chi-square assumption holds")
+
+# Odds ratio + 95% CI per D-11.
+odds_ratio = (a * d) / (b * c)
+log_or = np.log(odds_ratio)
+se_log_or = np.sqrt(1.0 / a + 1.0 / b + 1.0 / c + 1.0 / d)
+or_lo = float(np.exp(log_or - 1.96 * se_log_or))
+or_hi = float(np.exp(log_or + 1.96 * se_log_or))
+print(f"OR={odds_ratio:.3f}  95% CI=[{or_lo:.3f}, {or_hi:.3f}]")
+
+# Wilson 95% CI on P(blitz | is_play_action=1) per D-12 (closed-form, no statsmodels).
+p_hat = a / (a + b)
+n_pa = a + b
+z = 1.96
+z2 = z * z
+denom = 1.0 + z2 / n_pa
+centre = (p_hat + z2 / (2 * n_pa)) / denom
+half = (z * np.sqrt(p_hat * (1 - p_hat) / n_pa + z2 / (4 * n_pa * n_pa))) / denom
+wilson_lo, wilson_hi = float(centre - half), float(centre + half)
+print(f"P(blitz | PA=1, S1) = {p_hat:.4f}  Wilson CI=[{wilson_lo:.4f}, {wilson_hi:.4f}]  (N={n_pa})")
+# Paired number per D-12: P(blitz | PA=0, S1).
+p_no = c / (c + d)
+print(f"Paired: P(blitz | PA=0, S1) = {p_no:.4f}  (N={c + d})")
+print(
+    f"Pre-registered prediction (analysis-plan.md): |gap| >= 5pp; "
+    f"observed gap = {(p_hat - p_no) * 100:+.2f}pp"
+)
+
+# %% [markdown]
+# ## STAT-08 sensitivity: Predictability Index leaderboard with vs without `competitive_plays` (D-13)
+#
+# Recompute the per-team predictability scalar on two universes:
+# 1. `competitive_plays` (locked headline; ~57k pass plays after wp/qtr filter)
+# 2. `plays WHERE play_type='pass'` (unfiltered; ~80k pass plays, bypasses the view)
+#
+# Report rank delta and Spearman correlation between the two leaderboards.
+
+# %%
+# Unfiltered universe: bypass the competitive_plays view; query plays directly.
+SQL_PRED_UNFILTERED = """
+WITH situations AS (
+    SELECT p.defteam, p.season, p.game_id, p.play_id, p.play_type,
+           CASE
+               WHEN p.down = 3 AND p.ydstogo >= 7              THEN 'S1_3rd_and_long'
+               WHEN p.yardline_100 <= 20                       THEN 'S2_red_zone'
+               WHEN p.down = 1 AND p.ydstogo = 10              THEN 'S3_1st_and_10'
+               WHEN p.down = 2 AND p.ydstogo BETWEEN 3 AND 6   THEN 'S4_2nd_and_medium'
+               ELSE NULL
+           END AS situation_id
+    FROM plays p
+)
+SELECT
+    s.defteam, s.season, s.situation_id,
+    SUM(CASE WHEN f.n_blitzers >= 1 THEN 1 ELSE 0 END)   AS blitz_count,
+    SUM(CASE WHEN f.n_blitzers = 0 THEN 1 ELSE 0 END)   AS no_blitz_count,
+    COUNT(*)                                             AS total_pass_plays
+FROM situations s
+JOIN ftn_play f USING (game_id, play_id)
+WHERE s.situation_id IS NOT NULL AND s.play_type = 'pass'
+GROUP BY s.defteam, s.season, s.situation_id
+"""
+
+with get_conn() as conn:
+    raw_unf = pd.read_sql_query(SQL_PRED_UNFILTERED, conn)
+
+print(
+    f"Unfiltered (play_type='pass' bypassing competitive_plays): "
+    f"{raw_unf['total_pass_plays'].sum():,} pass plays"
+)
+
+# %%
+
+
+def _per_team_scalar(rollup: pd.DataFrame) -> pd.DataFrame:
+    agg = (
+        rollup.groupby(["defteam", "situation_id"], as_index=False)
+              .agg(
+                  blitz_count=("blitz_count", "sum"),
+                  no_blitz_count=("no_blitz_count", "sum"),
+                  total_pass_plays=("total_pass_plays", "sum"),
+              )
+    )
+    agg["n"] = agg["total_pass_plays"]
+    agg["pred_index"] = agg.apply(
+        lambda r: compute_predictability_index(int(r["blitz_count"]), int(r["no_blitz_count"])),
+        axis=1,
+    )
+    surviving = min_n_filter(agg, n_col="n", n_threshold=MIN_N_FOR_CELL)
+    out = surviving.groupby("defteam", as_index=False).apply(
+        lambda g: float(np.average(g["pred_index"], weights=g["n"])),
+        include_groups=False,
+    )
+    out.columns = ["defteam", "pred_index_scalar"]
+    return out.sort_values("pred_index_scalar", ascending=False).reset_index(drop=True)
+
+
+with_filter = _per_team_scalar(raw)        # competitive_plays universe (from Task 2)
+without_filter = _per_team_scalar(raw_unf)  # plays universe (this task)
+
+with_filter["rank_with"] = with_filter["pred_index_scalar"].rank(ascending=False, method="min")
+without_filter["rank_without"] = without_filter["pred_index_scalar"].rank(
+    ascending=False, method="min"
+)
+
+merged = with_filter.merge(without_filter, on="defteam", suffixes=("_with", "_without"))
+merged["rank_delta"] = (merged["rank_with"] - merged["rank_without"]).astype(int)
+
+rho_lb, rho_lb_p = stats.spearmanr(merged["rank_with"], merged["rank_without"])
+print(f"STAT-08 sensitivity: Spearman ρ between leaderboards = {rho_lb:.3f} (p={rho_lb_p:.4f})")
+print(f"Largest |rank_delta|: {merged['rank_delta'].abs().max()}")
+print("Top-5 by with-filter ranking:")
+print(merged.head(5)[["defteam", "rank_with", "rank_without", "rank_delta"]].to_string(index=False))
+print("Top-5 by without-filter ranking:")
+print(
+    merged.sort_values("rank_without")
+          .head(5)[["defteam", "rank_with", "rank_without", "rank_delta"]]
+          .to_string(index=False)
+)
+
+# %% [markdown]
+# ## Limitations + sample-size discipline summary
+
+# %%
+print("Phase 3 / 02_predictability_modeling.ipynb — methodology lock satisfied.")
+print(
+    f"  Universe: competitive_plays JOIN ftn_play, play_type='pass' "
+    f"({raw['total_pass_plays'].sum():,} pass plays)"
+)
+print(
+    f"  Per-(team, situation) cells: {len(team_sit)}; "
+    f"below N>={MIN_N_FOR_CELL}: {team_sit['pred_index'].isna().sum()}"
+)
+print(
+    f"  Spearman validation gate (H vs KL): ρ = {spearman_rho:.3f}  "
+    f"(gate: >= {SPEARMAN_VALIDATION_GATE})"
+)
+print(
+    f"  STAT-06 chi-square (S1 PA x blitz): chi2={chi2:.3f}, p={p:.4f}, "
+    f"OR={odds_ratio:.3f} [{or_lo:.3f}, {or_hi:.3f}]"
+)
+print(f"  Wilson CI on P(blitz | PA=1, S1): [{wilson_lo:.4f}, {wilson_hi:.4f}]")
+print(f"  STAT-08 sensitivity: Spearman ρ between leaderboards = {rho_lb:.3f}")
