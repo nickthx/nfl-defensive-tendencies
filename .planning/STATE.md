@@ -5,14 +5,14 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 1 — Foundation & FTN Pivot Calibration
+**Current focus:** Phase 2 — Data Layer (ETL + SQLite Schema) — ready to plan
 
 ## Current Position
 
-Phase: 1 of 4 (Foundation & FTN Pivot Calibration) — COMPLETE
-Plan: 2 of 2 in Phase 1 — COMPLETE; ready to execute Plan 02-01 (Schema) and Plan 02-02 (ETL) in Phase 2
-Status: Phase 1 complete — all 14 requirements (BOOT-01..07 + AUDIT-01..07) met
-Last activity: 2026-04-29 — Plan 01-02 executed (AUDIT-01..07 complete; 4 anchor dimensions locked; 4 situations pre-registered; D-09 repo name locked; PROJECT.md pandas pin aligned)
+Phase: 1 of 4 (Foundation & FTN Pivot Calibration) — COMPLETE & VERIFIED
+Plan: 2 of 2 in Phase 1 — COMPLETE; ready to plan Phase 2 (Plan 02-01 Schema, Plan 02-02 ETL)
+Status: Phase 1 complete — all 14 requirements (BOOT-01..07 + AUDIT-01..07) met; verifier returned `passed` against the post-cleanup state
+Last activity: 2026-04-29 — Phase 1 cleanup commit (182ff15) landed: voice cleanup, scope expansion 2022-2024 → 2022-2025 (D-10), SHIP-08 placeholder ship-guard filed, SPEC.md pandas pin aligned, ruff clean. Re-verification passed 14/14.
 
 Progress: [██░░░░░░░░] 25%
 
@@ -34,7 +34,8 @@ Progress: [██░░░░░░░░] 25%
 
 **Recent Trend:**
 - Last 5 plans: 01-01 Bootstrap (10m, 3 task commits, 2 deviations auto-fixed); 01-02 FTN Audit (25m, 3 task commits, 0 Rule-1/2/3 deviations, 1 setup-procedure reapplication, 2 documented findings flagged for v2)
-- Trend: on-pace; Phase 1 closed cleanly with all 14 requirements met
+- Post-Phase-1 cleanup (commit 182ff15): voice cleanup applied to README Hook + ftn-schema-audit.md (internal codes stripped, em dashes removed, "not X, Y" patterns rewritten); scope expanded 2022-2024 → 2022-2025 (D-10); audit notebook re-run; SHIP-08 placeholder ship-guard filed; SPEC.md pin aligned; ruff clean. Re-verification: passed 14/14.
+- Trend: on-pace; Phase 1 closed cleanly with all 14 requirements met and recruiter-facing prose voice-reviewed.
 
 *Updated after each plan completion*
 
@@ -59,6 +60,8 @@ Recent decisions affecting current work:
 - **FTN<->pbp match rate observed 0.9998** (Plan 01-02). Phase 2 ETL-04 keeps the > 0.95 floor; observed value gives ~5pp of headroom.
 - **PROJECT.md pandas pin aligned** (Plan 01-02 / Pitfall #20 prevention): stale `pandas>=2.2,<2.4` corrected to `pandas>=2.1,<2.3`. PROJECT.md, requirements.txt, SUMMARY.md, PATTERNS.md now agree.
 - **v2 candidate flagged**: pbp now exposes ngs-derived `defense_coverage_type` (0.025 NaN on pass) and `defense_man_zone_type` (0.023 NaN on pass) at populated rates. v1 stays as locked because pivot decision is in writing (D-09); using these would re-open the man-zone framing the project deliberately stepped away from. Documented in `docs/ftn-schema-audit.md`.
+- **D-10: Scope expanded 2022-2024 → 2022-2025** (post-Phase-1 cleanup, commit 182ff15). The 2025 NFL season completed February 2026 with Super Bowl LX. Pre-pivot data-quality check (`scratch/verify_2025.py`) confirmed full schema parity (29 columns, no adds/removes), 4-season match rate 0.9999, all 8 anchor candidates re-validated against the 30% NaN cutoff. 4-season totals: 80,782 pass / 59,824 run / 140,606 competitive plays. Audit notebook re-run end-to-end; CSV regenerated. Adds current-season recency for recruiters without disturbing the locked anchor set or the 4-situation slate.
+- **SHIP-08 filed** (post-Phase-1 cleanup): placeholder ship-guard requirement — `! grep -qE '<[A-Z_]{4,}>' README.md` and same for FINDINGS.md must hold before push. Enforced as a step in the SHIP-01 GitHub Actions workflow. Phase 4 count went from 20 → 21; total v1 reqs 55 → 56.
 
 ### Pending Todos
 
@@ -85,5 +88,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-29
-Stopped at: Plan 01-02 (FTN Audit) executed cleanly — 3 task commits + SUMMARY (`ba1f131` audit notebook + null profile + schema-audit narrative, `c8ddff3` pre-registered analysis plan, `64219fb` D-09 lock + pandas pin fix + SPEC reframe + README hook fill). FTN<->pbp match rate observed 0.9998 across 137,899 rows. **Phase 1 complete.**
-Resume file: .planning/phases/02-data-layer-etl-schema/02-01-PLAN.md — ready for Phase 2 planning (Plan 02-01 Schema and Plan 02-02 ETL); run `/gsd-plan-phase 2` to generate the plans.
+Stopped at: Phase 1 closed and re-verified after a single cleanup commit (`182ff15`) that applied voice cleanup to recruiter-facing prose, expanded scope to 2022-2025 (D-10), filed SHIP-08, aligned the SPEC pandas pin, and ran ruff --fix. The audit notebook re-ran end-to-end against the 4-season scope; the null-profile CSV was regenerated. The verifier returned `passed` (14/14 must-haves) against the post-cleanup state. **Phase 1 complete and verified.**
+Resume file: ready for Phase 2 planning (Plan 02-01 Schema and Plan 02-02 ETL); run `/gsd-plan-phase 2` to generate the plans.

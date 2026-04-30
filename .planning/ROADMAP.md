@@ -3,7 +3,7 @@
 **Created:** 2026-04-29
 **Granularity:** coarse (3–5 phases)
 **Parallelization:** enabled (within-phase)
-**Coverage:** 55 / 55 v1 requirements mapped
+**Coverage:** 56 / 56 v1 requirements mapped
 
 ---
 
@@ -143,8 +143,8 @@ Phases execute in numeric order: 1 → 2 → 3 → 4. Decimal phases inserted on
 | 1 | BOOT-01..07, AUDIT-01..07 | 14 |
 | 2 | ETL-01..06, SCHEMA-01..03 | 9 |
 | 3 | QUERY-01..09, STAT-01..08 | 17 |
-| 4 | VIZ-01..05, DOC-01..08, SHIP-01..07 | 20 |
-| **Total** | | **55 / 55** |
+| 4 | VIZ-01..05, DOC-01..08, SHIP-01..08 | 21 |
+| **Total** | | **56 / 56** |
 
 **Orphans:** none.
 **Duplicates:** none.

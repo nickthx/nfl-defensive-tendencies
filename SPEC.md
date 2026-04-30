@@ -1,7 +1,7 @@
 # Project: NFL Defensive Tendencies — A Situational Analysis
 
 ## Objective
-Build a portfolio-grade data analytics project examining how NFL defenses deploy schemes situationally, and which tendencies are exploitable. Use FTN charting + nflfastR play-by-play (both via `nfl-data-py==0.3.3`) for the 2022–2024 seasons. Target audience: data-analyst recruiters and sports-analytics teams reviewing entry-level applicants.
+Build a portfolio-grade data analytics project examining how NFL defenses deploy schemes situationally, and which tendencies are exploitable. Use FTN charting + nflfastR play-by-play (both via `nfl-data-py==0.3.3`) for the 2022–2025 seasons (four seasons through Super Bowl LX). Target audience: data-analyst recruiters and sports-analytics teams reviewing entry-level applicants.
 
 > **Working folder name:** `nfl-coverage-tendencies` (kept for git history continuity).
 > **Public GitHub repo name:** locked at the end of Phase 1 (likely `nfl-defensive-tendencies`).
