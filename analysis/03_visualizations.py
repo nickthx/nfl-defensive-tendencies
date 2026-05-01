@@ -360,6 +360,12 @@ adjust_text(
 
 fig.tight_layout()
 scatter_path = IMAGES_DIR / "02_kl_vs_h_scatter.png"
-fig.savefig(scatter_path)
+# Use bbox=None so the 8x8 figsize @ 200 DPI produces a square 1600x1600 output.
+# The tight-crop trim from _style.py's savefig.bbox='tight' shaves X and Y
+# asymmetrically when adjust_text shifts labels, making the output non-square.
+import matplotlib as _mpl  # noqa: E402, PLC0415
+
+with _mpl.rc_context({"savefig.bbox": None}):
+    fig.savefig(scatter_path)
 plt.close(fig)
 print(f"Wrote {scatter_path} ({scatter_path.stat().st_size // 1024} KB)")
