@@ -330,6 +330,94 @@ print(
 )
 
 # %% [markdown]
+# ## EXPLORATORY: PA x blitz on S3 (1st-and-10) - NOT pre-registered in docs/analysis-plan.md
+#
+# Per Phase 4 / 04-CONTEXT D-10..D-15. The S1 chi-square (above) is the
+# pre-registered headline; this cell is the exploratory follow-up that tests
+# the same mechanism on the situation where PA actually fires (PA rate on S3
+# = 46.49% vs 1.235% on S1). The S3 universe gives the chi-square inferential
+# power the S1 N=109 stratum cannot.
+#
+# Universe: competitive_plays JOIN ftn_play, down=1 AND ydstogo=10 AND play_type='pass'.
+# Verified counts (2026-04-30): N total = 18,609; N(PA=1) = 8,652; N(PA=0) = 9,957.
+#
+# Reporting structure mirrors S1 (chi^2 + p, expected min cell, OR + 95% CI,
+# Wilson CI on P(blitz | PA=1, S3), paired P(blitz | PA=0, S3), observed pp gap)
+# PLUS first-class OR delta vs S1 per D-11.
+
+# %%
+S3_PA_BLITZ_SQL = """
+SELECT
+    f.is_play_action,
+    SUM(CASE WHEN f.n_blitzers >= 1 THEN 1 ELSE 0 END)  AS blitz_count,
+    SUM(CASE WHEN f.n_blitzers = 0 THEN 1 ELSE 0 END)   AS no_blitz_count
+FROM competitive_plays cp
+JOIN ftn_play f USING (game_id, play_id)
+WHERE cp.down = 1 AND cp.ydstogo = 10
+  AND cp.play_type = 'pass'
+  AND f.is_play_action IS NOT NULL
+GROUP BY f.is_play_action
+"""
+
+with get_conn() as conn:
+    s3 = pd.read_sql_query(S3_PA_BLITZ_SQL, conn)
+
+print(s3)
+
+# Build the 2x2 contingency in the order required by D-09 (mirror S1):
+#   [[blitz=1 & PA=1, blitz=0 & PA=1],
+#    [blitz=1 & PA=0, blitz=0 & PA=0]]
+row_pa = s3.loc[s3["is_play_action"] == 1].iloc[0]
+row_no = s3.loc[s3["is_play_action"] == 0].iloc[0]
+a3 = int(row_pa["blitz_count"])
+b3 = int(row_pa["no_blitz_count"])
+c3 = int(row_no["blitz_count"])
+d3 = int(row_no["no_blitz_count"])
+table_s3 = np.array([[a3, b3], [c3, d3]])
+print(f"S3 PA x blitz contingency:\n{table_s3}")
+
+chi2_s3, p_s3, _, expected_s3 = stats.chi2_contingency(table_s3)
+print(f"chi2 = {chi2_s3:.4f}")
+print(f"p-value = {p_s3:.6f}")
+print(f"expected cells (min={expected_s3.min():.1f}): chi-square assumption holds")
+
+odds_ratio_s3 = (a3 * d3) / (b3 * c3)
+log_or_s3 = np.log(odds_ratio_s3)
+se_log_or_s3 = np.sqrt(1.0 / a3 + 1.0 / b3 + 1.0 / c3 + 1.0 / d3)
+or_lo_s3 = float(np.exp(log_or_s3 - 1.96 * se_log_or_s3))
+or_hi_s3 = float(np.exp(log_or_s3 + 1.96 * se_log_or_s3))
+print(f"OR={odds_ratio_s3:.3f}  95% CI=[{or_lo_s3:.3f}, {or_hi_s3:.3f}]")
+
+# Wilson CI on P(blitz | PA=1, S3); reuse the closed-form pattern from S1.
+p_hat_s3 = a3 / (a3 + b3)
+n_pa_s3 = a3 + b3
+z = 1.96
+z2 = z * z
+denom = 1.0 + z2 / n_pa_s3
+centre = (p_hat_s3 + z2 / (2 * n_pa_s3)) / denom
+half = (z * np.sqrt(p_hat_s3 * (1 - p_hat_s3) / n_pa_s3 + z2 / (4 * n_pa_s3 * n_pa_s3))) / denom
+wilson_lo_s3, wilson_hi_s3 = float(centre - half), float(centre + half)
+print(
+    f"P(blitz | PA=1, S3) = {p_hat_s3:.4f}  "
+    f"Wilson CI=[{wilson_lo_s3:.4f}, {wilson_hi_s3:.4f}]  (N={n_pa_s3})"
+)
+p_no_s3 = c3 / (c3 + d3)
+print(f"Paired: P(blitz | PA=0, S3) = {p_no_s3:.4f}  (N={c3 + d3})")
+print(f"Observed pp gap (S3) = {(p_hat_s3 - p_no_s3) * 100:+.2f}pp")
+
+# Per 04-CONTEXT D-11: report OR delta between S1 and S3 as a first-class output.
+# The S1 OR is in scope as `odds_ratio` from the S1 cell above; this cell MUST
+# run after the S1 cell so the variable is in the kernel namespace.
+or_delta = odds_ratio_s3 - odds_ratio
+print(f"OR delta (S3 - S1) = {or_delta:+.3f}  (S1 OR={odds_ratio:.3f}, S3 OR={odds_ratio_s3:.3f})")
+direction_match = (
+    "yes"
+    if (odds_ratio < 1 and odds_ratio_s3 < 1) or (odds_ratio > 1 and odds_ratio_s3 > 1)
+    else "no"
+)
+print(f"Direction agreement (both OR < 1 or both OR > 1): {direction_match}")
+
+# %% [markdown]
 # ## STAT-08 sensitivity: Predictability Index leaderboard with vs without `competitive_plays` (D-13)
 #
 # Recompute the per-team predictability scalar on two universes:
@@ -443,3 +531,8 @@ print(
 )
 print(f"  Wilson CI on P(blitz | PA=1, S1): [{wilson_lo:.4f}, {wilson_hi:.4f}]")
 print(f"  STAT-08 sensitivity: Spearman ρ between leaderboards = {rho_lb:.3f}")
+print(
+    f"S3 (exploratory): PA x blitz on 1st-and-10  N={a3 + b3 + c3 + d3}  "
+    f"chi2={chi2_s3:.3f}  p={p_s3:.3f}  OR={odds_ratio_s3:.3f}  "
+    f"OR delta vs S1={or_delta:+.3f}"
+)
