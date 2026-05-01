@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — 04-01 complete, ready for 04-02 + 04-03
+**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — 04-02 complete, ready for 04-03
 
 ## Current Position
 
 Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — IN PROGRESS
-Plan: 1/3 complete. 04-01 (Visualizations + S3 chi-square) DONE. Wave 2: 04-02 (FINDINGS + README) + 04-03 (CI + ship) can now parallelize.
-Status: 04-01 executed cleanly. 3 PNGs in findings/images/ (hero portrait, 1280x640 social preview, KL-vs-H scatter). S3 exploratory chi-square appended to 02_predictability_modeling.py (OR=1.210, contradicts S1 direction). Both notebooks cleared and run end-to-end. 3 Rule-1 deviations (QUERY-07 column mismatch fixed inline; rc_context savefig.bbox=None for exact pixel dimensions). VIZ-01..05 complete.
-Last activity: 2026-04-30 — 04-01 executed. 4 task commits (bb02935, 8e3c82c, 8746e6e, 76ef3ad). SUMMARY created. League avg = 14.28. S3 chi2=33.46, p<0.000001, OR=1.210, OR delta vs S1=+0.562, direction=contradicts.
+Plan: 2/3 complete. 04-01 (Visualizations + S3 chi-square) DONE. 04-02 (FINDINGS + README + D-48/D-49) DONE. Next: 04-03 (CI + ship).
+Status: 04-02 executed cleanly. findings/FINDINGS.md authored (178 lines, 6 named insights, 4 appendix tables, 5 limitations, attribution). README hand-rewritten (hero PNG above fold, Mermaid flowchart, 5-command setup, 6-term glossary). data/README.md extended. D-48 5-site n_blitzers reconciliation complete; D-49 negative grep verified 0 matches. 3 Rule-2 deviations (4 additional files caught beyond plan's 5 sites). DOC-01..08 complete.
+Last activity: 2026-04-30 — 04-02 executed. 3 task commits (854f9c7, ca484a1, 5f1d5e9). SUMMARY created. FINDINGS.md: PHI/SF/IND top (23.5/23.5/22.4), MIA/TB/MIN bottom (5.9/4.1/1.5), league avg 14.3. S1 OR=0.648 p=0.063; S3 OR=1.210 p<0.000001; Spearman rho=-0.111; STAT-08 rho=0.982.
 
-Progress: [█████████░] 83%
+Progress: [█████████░] 91%
 
 ## Performance Metrics
 
@@ -30,7 +30,7 @@ Progress: [█████████░] 83%
 | 1. Foundation & FTN Pivot Calibration | 2 / 2 (COMPLETE) | 35m | 17.5m |
 | 2. Data Layer (ETL + Schema) | 2 / 2 (COMPLETE) | 18.5m | 9.25m |
 | 3. Analytical Layer (SQL + Python) | 3 / 3 (COMPLETE) | 37m | 12.3m |
-| 4. Story & Ship | 1 / 3 (IN PROGRESS) | 55m | — |
+| 4. Story & Ship | 2 / 3 (IN PROGRESS) | 100m | — |
 
 **Recent Trend:**
 - 04-01 executed: 4 task commits in 55min. 3 PNGs (hero 1845x2178 portrait, social preview 1280x640, scatter 1600x1600). S3 chi2=33.46 p<0.000001 OR=1.210 contradicts S1. League avg=14.28. 3 Rule-1 deviations (QUERY-07 columns, tight-bbox pixel drift x2). VIZ-01..05 complete.
@@ -98,5 +98,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: 04-01 COMPLETE. 4 task commits (bb02935, 8e3c82c, 8746e6e, 76ef3ad) + docs commit. SUMMARY at `.planning/phases/04-story-and-ship/04-01-SUMMARY.md`. VIZ-01..05 satisfied. 3 PNGs in findings/images/. S3 cells in 02_predictability_modeling.py. Both notebooks cleared and run end-to-end.
-Resume file: `.planning/phases/04-story-and-ship/04-02-PLAN.md` and `04-03-PLAN.md`. Wave 2: 04-02 (FINDINGS + README) + 04-03 (CI + ship skeleton) can run in parallel — no files_modified overlap. 04-03 public-ship sub-tasks require 04-02 done first (SHIP-08 placeholder grep would fail on unfinished README/FINDINGS).
+Stopped at: 04-02 COMPLETE. 3 task commits (854f9c7, ca484a1, 5f1d5e9) + docs commit. SUMMARY at `.planning/phases/04-story-and-ship/04-02-SUMMARY.md`. DOC-01..08 satisfied. findings/FINDINGS.md (178 lines), README.md (74 lines), data/README.md (26 lines). D-48 5-site reconciliation + D-49 negative grep (0 matches). 01_exploratory.py + .ipynb re-synced and re-cleared.
+Resume file: `.planning/phases/04-story-and-ship/04-03-PLAN.md`. CI workflow + ship sequence: `.github/workflows/ci.yml`, fresh-venv scripts, LICENSE (MIT), GitHub MCP ship, branch protection, social preview, profile pin, commit audit, non-author verification.
