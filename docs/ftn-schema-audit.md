@@ -74,8 +74,13 @@ tiebreaker. The 4 chosen anchors:
    The cleanest, most recruiter-recognizable pressure signal at 0.000 NaN.
    Drives the 3rd-and-long blitz-rate hypothesis and the situation-by-
    situation blitz-rate decomposition. Operational definition for the
-   "blitz" boolean is `n_blitzers > 4` (5+ rushers on a pass, in standard
-   nflfastR convention).
+   "blitz" boolean is `n_blitzers > 0` (any extra rusher above the base
+   4-man defensive front, per FTN column semantics — see calibration note
+   below).
+
+### Calibration note (Phase 3 post-execution)
+
+The original operational definition reused the standard nflfastR convention where `n_pass_rushers >= 5` (5 or more total rushers) defines a blitz. That convention applies to nflfastR's `n_pass_rushers` column, which is a total rusher count. FTN's `n_blitzers` is a different column with a different encoding: it counts extra rushers above the base 4-man defensive front (max observed value = 6 across 4 seasons). The nflfastR-style threshold applied to the FTN column returned only 7 blitz plays out of 58,178 competitive pass plays (0.012%) — analytically degenerate. Any `n_blitzers >= 1` means a blitz was sent; the corrected boolean is `n_blitzers > 0`. Under the corrected boolean, the league-wide blitz rate on competitive pass plays is 29.45% (N=17,131 / 58,178), consistent with public sports-analytics benchmarks. See `.planning/STATE.md` D-14 for the full audit trail.
 
 2. **n_pass_rushers** (Pressure / front, on `play_type='pass'`).
    The complementary pass-rush count covers four-down-line vs.

@@ -29,7 +29,9 @@ The headline analytical artifact. Cell 1 of `02_predictability_modeling.ipynb` l
   - **Validation gate:** Spearman rank correlation between the H/log(k)-derived ranking and the KL-derived ranking is reported in the comparison table. **Spearman ρ ≥ 0.85** = the two rankings agree; KL serves as the methodological sensitivity check (STAT-08 contribution). **Spearman ρ < 0.85** = the divergence is treated as a substantive finding to investigate, NOT papered over.
   - **Rationale:** H/log(k) and KL measure different things — concentration vs. deviation-from-league. For the headline "predictability" framing, concentration is the right concept (a team that always does what the league does is still predictable, even though their KL would be zero).
 
-- **D-02 Input dimension = blitz boolean (`n_blitzers > 4`).** k=2 fixed support. Computed on `play_type='pass'` rows only (the operational definition from `docs/ftn-schema-audit.md`). Cleanest defensive-tendency signal; the most recruiter-recognizable; the only single anchor that fits in the README glossary in one sentence.
+- **D-02 Input dimension = blitz boolean (`n_blitzers > 0`).** k=2 fixed support. Computed on `play_type='pass'` rows only (the operational definition from `docs/ftn-schema-audit.md`). Cleanest defensive-tendency signal; the most recruiter-recognizable; the only single anchor that fits in the README glossary in one sentence.
+
+**Phase 3 calibration (post-execution):** corrected to `n_blitzers > 0` — see STATE.md D-14 for rationale and Plan 04-02 (D-48) for the cross-doc reconciliation sweep that landed this.
 
 - **D-03 Aggregation = both: per-team-per-situation matrix in FINDINGS + aggregate scalar in hero chart.**
   - The 32-team × 4-situation matrix is the FINDINGS.md methodology-appendix artifact (table or heatmap).
@@ -75,7 +77,7 @@ The locked filename slate, organized as rollup MATERIALS — SQL produces tables
 
 ### Chi-square + Wilson CI + sensitivity (STAT-06, STAT-08)
 
-- **D-09 Chi-square headline target = PA cross-cutting on S1 (blitz × `is_play_action` 2×2 on 3rd-and-long pass plays).** League-aggregate 2×2 contingency: `n_blitzers > 4` (y/n) × `is_play_action` (y/n) on `down=3 AND ydstogo>=7 AND play_type='pass'` rows of `competitive_plays`. Tests the analysis-plan.md PA cross-cutting hypothesis ("league blitz rate against play-action vs straight dropback gap ≥ 5pp"). Activates the cross-cutting D-07 (Phase 1) modifier in the headline test; both anchor categories (pressure + play-fakery) feature simultaneously.
+- **D-09 Chi-square headline target = PA cross-cutting on S1 (blitz × `is_play_action` 2×2 on 3rd-and-long pass plays).** League-aggregate 2×2 contingency: `n_blitzers > 0` (y/n) × `is_play_action` (y/n) on `down=3 AND ydstogo>=7 AND play_type='pass'` rows of `competitive_plays`. Tests the analysis-plan.md PA cross-cutting hypothesis ("league blitz rate against play-action vs straight dropback gap ≥ 5pp"). Activates the cross-cutting D-07 (Phase 1) modifier in the headline test; both anchor categories (pressure + play-fakery) feature simultaneously.
 
 - **D-10 Test scope = league-aggregate 2×2.** Single contingency on all 32 teams pooled. Matches the analysis-plan.md hypothesis phrasing ("league-wide rate"). Team-by-team variance lives in the predictability index (D-01..D-06), not in the chi-square. NO supplemental 32×2 omnibus team-variance test.
 
@@ -118,7 +120,7 @@ The user explicitly skipped the `_common.py` helper API gray area at the top of 
 ### Pre-registered analytical scope (the firewall)
 
 - `docs/analysis-plan.md` — **THE locked situational slate.** S1/S2/S3/S4 filters + falsifiable hypotheses + cross-cutting PA modifier + sample-size discipline tiers + live N counts against the Phase 2 build. The chi-square headline (D-09) tests the PA cross-cutting hypothesis from this doc; the predictability index (D-01..D-06) operates inside the 4-situation slate. **Anything outside this slate stays in `01_exploratory.ipynb` and is labeled "Exploratory; not a headline finding."**
-- `docs/ftn-schema-audit.md` — Anchor dimension narrative; the operational definition `blitz = n_blitzers > 4` (used in D-02 and D-09) is locked here; NaN-rate notes for run plays (the blitz queries filter `play_type='pass'` first per the audit).
+- `docs/ftn-schema-audit.md` — Anchor dimension narrative; the operational definition `blitz = n_blitzers > 0` (corrected per D-14; used in D-02 and D-09) is locked here; NaN-rate notes for run plays (the blitz queries filter `play_type='pass'` first per the audit).
 
 ### Research backbone (read in this order)
 

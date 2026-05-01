@@ -3,7 +3,7 @@
 -- Filter:      competitive_plays JOIN ftn_play, play_type='pass'.
 -- Result shape: defteam TEXT, n_pass_plays INT, blitz_count INT, blitz_rate REAL, league_blitz_rate REAL, deviation_pp REAL
 -- Hypothesis:  n/a (rollup material; KL-from-league input for STAT-04 predictability index)
--- Caveats:     n_blitzers is NaN on run plays - filter to play_type='pass' BEFORE applying the > 0 predicate. FTN n_blitzers counts EXTRA rushers beyond the base front (0=standard rush, 1+=blitz). The plan-doc threshold n_blitzers > 4 was calibrated for a different encoding; n_blitzers > 0 is the correct blitz indicator for this dataset. Teams with N<100 are still emitted here; the notebook applies min_n_filter for claim-level use.
+-- Caveats:     n_blitzers is NaN on run plays - filter to play_type='pass' BEFORE applying the > 0 predicate. FTN n_blitzers counts EXTRA rushers beyond the base front (0=standard rush, 1+=blitz). A nflfastR-style total-rusher threshold applied to this FTN column was calibrated for a different encoding; n_blitzers > 0 is the correct blitz indicator for this dataset. Teams with N<100 are still emitted here; the notebook applies min_n_filter for claim-level use.
 -- N expected:  ~32 rows (one per defteam) over a ~57k pass-play universe. League blitz rate ~30%.
 -- ---
 

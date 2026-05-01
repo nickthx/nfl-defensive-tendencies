@@ -55,7 +55,7 @@ Everything else (depth of statistical work, breadth of business questions, sophi
 - `nfl_data_py.import_pbp_data(years)` returns the full nflfastR play-by-play (~47k plays/season) with EPA, win probability, situational context, and outcomes. Joinable to FTN on `nflverse_game_id` + `nflverse_play_id` (NOT `ftn_game_id` / `ftn_play_id`).
 - `nfl-data-py` itself was archived 2025-09-25; we pin `==0.3.3` and accept the risk for SPEC-literal compatibility.
 
-**Domain primer (for the FINDINGS.md / README audience):** A defensive tendency is the rate at which a defense plays a particular look in a specific situation. Even without coverage labels, observable tendency dimensions include: how often a defense brings a blitz (`n_blitzers > 4`), how many pass rushers it sends, how it responds to play-action, how often it allows screens / RPOs to gain leverage, and how it positions vs offensive personnel. Modern offenses exploit known defensive tendencies — analyzing those tendencies is real work done by NFL analytics departments.
+**Domain primer (for the FINDINGS.md / README audience):** A defensive tendency is the rate at which a defense plays a particular look in a specific situation. Even without coverage labels, observable tendency dimensions include: how often a defense brings a blitz (`n_blitzers > 0`), how many pass rushers it sends, how it responds to play-action, how often it allows screens / RPOs to gain leverage, and how it positions vs offensive personnel. Modern offenses exploit known defensive tendencies — analyzing those tendencies is real work done by NFL analytics departments.
 
 **Sample-size discipline (tiered):**
 - **N≥30** for tendency claims (e.g., "the Bills blitz 38% of the time on 3rd-and-long")

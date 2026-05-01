@@ -33,7 +33,7 @@ public sports-analytics literature.
 
 **Hypotheses (falsifiable):**
 
-- H1: League-wide blitz rate (`n_blitzers > 4`) on 3rd-and-long exceeds 35%
+- H1: League-wide blitz rate (`n_blitzers > 0`) on 3rd-and-long exceeds 35%
   over 2022-2025. **Falsified if** observed league-wide rate <= 35% with
   N >= 1,000 (the threshold is met across 4 seasons of every team's
   3rd-and-long pass plays; sample size is not the gate).

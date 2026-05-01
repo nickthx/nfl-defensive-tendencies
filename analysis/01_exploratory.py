@@ -145,7 +145,7 @@ print(f"Cells dropped (see WARNING above): {len(team_situation_n) - len(filtered
 # %% [markdown]
 # ## Anchor distribution snapshot — league blitz rate by situation
 #
-# League-aggregate blitz rate (`n_blitzers > 4` on `play_type='pass'`) per
+# League-aggregate blitz rate (`n_blitzers >= 1` on `play_type='pass'`) per
 # pre-registered situation. This is the baseline that per-team predictability
 # indexes are measured against in `02_predictability_modeling.ipynb`.
 #
@@ -159,7 +159,7 @@ with get_conn() as conn:
         df = pd.read_sql_query(
             f"""
             SELECT
-                AVG(CASE WHEN n_blitzers > 4 THEN 1.0 ELSE 0.0 END) AS blitz_rate,
+                AVG(CASE WHEN n_blitzers >= 1 THEN 1.0 ELSE 0.0 END) AS blitz_rate,
                 COUNT(*) AS n
             FROM competitive_plays cp
             JOIN ftn_play f USING (game_id, play_id)

@@ -31,7 +31,7 @@
 #   finding, NOT papered over.
 #
 # - **Input dimension (D-02).** k=2 fixed support: blitz boolean
-#   `n_blitzers > 4` evaluated on `play_type='pass'` rows only. Per
+#   `n_blitzers > 0` evaluated on `play_type='pass'` rows only. Per
 #   `docs/ftn-schema-audit.md`, `n_blitzers` is NaN on run plays — the
 #   pass-only filter is mandatory.
 #
@@ -256,7 +256,7 @@ if spearman_rho < SPEARMAN_VALIDATION_GATE:
 # rows = `n_blitzers >= 1` (y/n), cols = `is_play_action` (y/n).
 # Tests the pre-registered PA cross-cutting hypothesis from `docs/analysis-plan.md`.
 #
-# DEVIATION (Rule 1 — bug fix): plan specified `n_blitzers > 4` (nflfastR convention for
+# DEVIATION (Rule 1 — bug fix): plan specified a nflfastR-style total-rusher threshold (nflfastR convention for
 # n_pass_rushers), but FTN's `n_blitzers` column counts dedicated extra rushers above the
 # base 4-man line, not total rushers. With n_blitzers ranging 0–6, the correct blitz boolean
 # is n_blitzers >= 1 (any non-lineman rushed). The plan's threshold produced only 7 blitz
