@@ -124,7 +124,7 @@ filtered = min_n_filter(team_sit, n_col="n", n_threshold=30)
 # Per-team aggregate scalar: N-weighted mean of pred_score over surviving cells.
 leaderboard = (
     filtered.groupby("defteam")
-    .apply(lambda g: np.average(g["pred_score"], weights=g["n"]))
+    .apply(lambda g: np.average(g["pred_score"], weights=g["n"]), include_groups=False)
     .reset_index(name="pred_score")
     .sort_values("pred_score", ascending=False)
     .reset_index(drop=True)
@@ -151,7 +151,12 @@ def render_leaderboard(
     savepath: Path,
     title: str,
     subtitle: str,
+    exact_pixels: tuple[int, int] | None = None,
 ) -> None:
+    # exact_pixels=(w, h): when set, overrides bbox="tight" so savefig hits the
+    # precise pixel count (e.g., 1280x640 for the social preview). The figsize
+    # already encodes the target at 200 DPI; tight-layout is skipped in this mode
+    # to avoid the tight-bbox trim that shifts pixel counts.
     palette = sns.color_palette("colorblind")
     top_color = palette[0]      # blue   #0173b2
     bottom_color = palette[1]   # orange #de8f05  (NON-RED per D-28)
@@ -206,8 +211,18 @@ def render_leaderboard(
             fontsize=9, va="center",
         )
 
-    fig.tight_layout()
-    fig.savefig(savepath)
+    if exact_pixels is not None:
+        # For exact pixel dimensions: override the global savefig.bbox rcParam which
+        # _style.py sets to "tight". Setting savefig.bbox=None in an rc_context
+        # prevents the tight-crop trim so figsize*dpi gives the exact pixel count.
+        # figsize=(6.4, 3.2) @ dpi=200 → exactly 1280x640 (verified empirically).
+        import matplotlib as mpl  # noqa: PLC0415
+
+        with mpl.rc_context({"savefig.bbox": None}):
+            fig.savefig(savepath)
+    else:
+        fig.tight_layout()
+        fig.savefig(savepath)
     plt.close(fig)
     print(f"Wrote {savepath} ({savepath.stat().st_size // 1024} KB)")
 
@@ -231,6 +246,7 @@ render_leaderboard(
     leaderboard, top_n=12, figsize=(6.4, 3.2),
     savepath=IMAGES_DIR / "01_predictability_ranking_top12.png",
     title=SOCIAL_TITLE, subtitle=SOCIAL_SUBTITLE,
+    exact_pixels=(1280, 640),
 )
 
 # %% [markdown]
