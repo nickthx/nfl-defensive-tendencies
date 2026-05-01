@@ -13,6 +13,7 @@ scipy>=1.13,<1.18         # chi2_contingency + entropy
 # Visualization
 matplotlib>=3.8,<3.11
 seaborn==0.13.2           # exact pin — only release in 0.13.x line
+adjustText>=1.0,<2          # 8-callout label placement on the KL-vs-H scatter (VIZ-03)
 
 # Notebooks
 jupyterlab>=4.2,<4.6
