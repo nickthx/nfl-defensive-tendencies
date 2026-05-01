@@ -5,16 +5,16 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — 3/3 plans complete; awaiting verifier
+**Current focus:** Phase 4 — Story & Ship — COMPLETE (verifier passed 21/21 REQ-IDs after gap closure; v1 milestone done)
 
 ## Current Position
 
-Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — EXECUTION COMPLETE; VERIFIER PENDING
+Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — COMPLETE
 Plan: 3/3 complete. 04-01 (Viz + S3) DONE. 04-02 (FINDINGS + README + D-48/D-49) DONE. 04-03 (CI + LICENSE + private-then-public ship) DONE.
-Status: Public repo live at https://github.com/nickthx/nfl-defensive-tendencies. CI green on lint-and-import-smoke (commit a119289). Branch protection ruleset 'main-protection' active on main, validated by rejecting a direct-push attempt. Social preview live (RGB-only resave of top-12 PNG; matplotlib RGBA was rejected by GitHub processor). Profile pinned. Description (69 chars) + 8 alphabetized topics + MIT LICENSE all in place. Task 6 incognito non-author verification: ship-approved on 7/7 desktop checks + 3/3 mobile (390px DOM/CSS introspection). 2 Rule-1 deviations during 04-03: CI pandas pin conflict (fixed forward via two-step --no-deps install in CI), matplotlib RGBA→RGB resave for social preview. 1 Rule-2 calibration: SHIP-02 wall-clock projected ~707s on Windows 11 vs 600s budget (Linux/macOS targets remain in budget). Process-level validation: branch protection blocked a direct push to main (recruiter-positive signal). All 21 phase REQ-IDs (VIZ-01..05, DOC-01..08, SHIP-01..08) substantively complete; verifier pass next.
-Last activity: 2026-05-01 — 04-03 executed. 3 task commits (eb1d8d7, d2ee16d, a119289) + 1 rolled-back direct-push attempt (720ab51, blocked by ruleset and not retried via PR because PR-creation MCP also 403). All 4 of Task 5's GitHub state changes done via UI (D-43 fallback) — MCP token had no admin scope for create_repository, branch protection, social preview, visibility flip, profile pin, OR PR creation. SUMMARY created at 04-03-SUMMARY.md (full D-43 fallback path log + RGB resave one-liner for future maintainers).
+Status: Public repo live at https://github.com/nickthx/nfl-defensive-tendencies. v1 milestone shipped. Verifier: PASSED on re-verification (16/16 must-haves, 21/21 REQ-IDs, 6/6 ROADMAP criteria). Initial verifier pass scored gaps_found (14/16) for two D-49-spirit gaps NOT in the plan-locked allow-list: SPEC.md L87 + analysis/02_predictability_modeling.ipynb cells 0+11 carrying stale 'n_blitzers > 4'. Both closed in commit 7c3a0f1. Final D-49 grep extended to include SPEC.md returns zero matches across all 11 file patterns.
+Last activity: 2026-05-01 — Phase 4 closed. 4 task commits + 1 ship summary + 1 gap closure: eb1d8d7 (CI+LICENSE+__init__), d2ee16d (fresh-venv scripts), a119289 (CI two-step nfl_data_py --no-deps fix), a05353e (04-03 SUMMARY+STATE+ROADMAP), 7c3a0f1 (D-49 gap closure: SPEC.md + .ipynb resync). VERIFICATION.md status: passed.
 
-Progress: [██████████] 100% execution; verifier pending
+Progress: [██████████] 100% — v1 shipped
 
 ## Performance Metrics
 

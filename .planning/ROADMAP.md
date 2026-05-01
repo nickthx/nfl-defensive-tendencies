@@ -26,7 +26,7 @@ This collapses the 6-phase prior to 4 phases per the **coarse** granularity cons
 - [x] **Phase 1: Foundation & FTN Pivot Calibration** - Bootstrap the repo and lock the 3–4 anchor defensive dimensions (completed 2026-04-29; 4 anchors locked: n_blitzers, n_pass_rushers, is_play_action, n_offense_backfield)
 - [x] **Phase 2: Data Layer (ETL + SQLite Schema)** - Reproducible parquet→SQLite pipeline with `competitive_plays` view (completed 2026-04-29; 1,139 games / 197,362 plays / 185,215 ftn_play / 105,556 competitive_plays)
 - [x] **Phase 3: Analytical Layer (SQL + Python)** - 8 queries, predictability index, chi-square evidence (completed 2026-04-30; 11 execution commits, 17/17 REQ-IDs delivered, 4 substantive findings — see STATE.md D-14..D-17)
-- [ ] **Phase 4: Story & Ship (Viz + Docs + Public GitHub)** - FINDINGS.md memo, hand-written README, public repo via GitHub MCP
+- [x] **Phase 4: Story & Ship (Viz + Docs + Public GitHub)** - FINDINGS.md memo, hand-written README, public repo via GitHub MCP (completed 2026-05-01; live at https://github.com/nickthx/nfl-defensive-tendencies; 21/21 REQ-IDs verified, 16/16 must-haves after gap closure)
 
 ---
 
