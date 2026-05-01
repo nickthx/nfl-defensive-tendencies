@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — 04-02 complete, ready for 04-03
+**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — 3/3 plans complete; awaiting verifier
 
 ## Current Position
 
-Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — IN PROGRESS
-Plan: 2/3 complete. 04-01 (Visualizations + S3 chi-square) DONE. 04-02 (FINDINGS + README + D-48/D-49) DONE. Next: 04-03 (CI + ship).
-Status: 04-02 executed cleanly. findings/FINDINGS.md authored (178 lines, 6 named insights, 4 appendix tables, 5 limitations, attribution). README hand-rewritten (hero PNG above fold, Mermaid flowchart, 5-command setup, 6-term glossary). data/README.md extended. D-48 5-site n_blitzers reconciliation complete; D-49 negative grep verified 0 matches. 3 Rule-2 deviations (4 additional files caught beyond plan's 5 sites). DOC-01..08 complete.
-Last activity: 2026-04-30 — 04-02 executed. 3 task commits (854f9c7, ca484a1, 5f1d5e9). SUMMARY created. FINDINGS.md: PHI/SF/IND top (23.5/23.5/22.4), MIA/TB/MIN bottom (5.9/4.1/1.5), league avg 14.3. S1 OR=0.648 p=0.063; S3 OR=1.210 p<0.000001; Spearman rho=-0.111; STAT-08 rho=0.982.
+Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — EXECUTION COMPLETE; VERIFIER PENDING
+Plan: 3/3 complete. 04-01 (Viz + S3) DONE. 04-02 (FINDINGS + README + D-48/D-49) DONE. 04-03 (CI + LICENSE + private-then-public ship) DONE.
+Status: Public repo live at https://github.com/nickthx/nfl-defensive-tendencies. CI green on lint-and-import-smoke (commit a119289). Branch protection ruleset 'main-protection' active on main, validated by rejecting a direct-push attempt. Social preview live (RGB-only resave of top-12 PNG; matplotlib RGBA was rejected by GitHub processor). Profile pinned. Description (69 chars) + 8 alphabetized topics + MIT LICENSE all in place. Task 6 incognito non-author verification: ship-approved on 7/7 desktop checks + 3/3 mobile (390px DOM/CSS introspection). 2 Rule-1 deviations during 04-03: CI pandas pin conflict (fixed forward via two-step --no-deps install in CI), matplotlib RGBA→RGB resave for social preview. 1 Rule-2 calibration: SHIP-02 wall-clock projected ~707s on Windows 11 vs 600s budget (Linux/macOS targets remain in budget). Process-level validation: branch protection blocked a direct push to main (recruiter-positive signal). All 21 phase REQ-IDs (VIZ-01..05, DOC-01..08, SHIP-01..08) substantively complete; verifier pass next.
+Last activity: 2026-05-01 — 04-03 executed. 3 task commits (eb1d8d7, d2ee16d, a119289) + 1 rolled-back direct-push attempt (720ab51, blocked by ruleset and not retried via PR because PR-creation MCP also 403). All 4 of Task 5's GitHub state changes done via UI (D-43 fallback) — MCP token had no admin scope for create_repository, branch protection, social preview, visibility flip, profile pin, OR PR creation. SUMMARY created at 04-03-SUMMARY.md (full D-43 fallback path log + RGB resave one-liner for future maintainers).
 
-Progress: [█████████░] 91%
+Progress: [██████████] 100% execution; verifier pending
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 8
-- Average duration: 13.2m
-- Total execution time: 145.5m (Phase 1: 35m / Phase 2: 18.5m / Phase 3: 37m / Phase 4: 55m so far)
+- Total plans completed: 10
+- Average duration: 19m
+- Total execution time: 235m (Phase 1: 35m / Phase 2: 18.5m / Phase 3: 37m / Phase 4: 145m)
 
 **By Phase:**
 
@@ -30,9 +30,10 @@ Progress: [█████████░] 91%
 | 1. Foundation & FTN Pivot Calibration | 2 / 2 (COMPLETE) | 35m | 17.5m |
 | 2. Data Layer (ETL + Schema) | 2 / 2 (COMPLETE) | 18.5m | 9.25m |
 | 3. Analytical Layer (SQL + Python) | 3 / 3 (COMPLETE) | 37m | 12.3m |
-| 4. Story & Ship | 2 / 3 (IN PROGRESS) | 100m | — |
+| 4. Story & Ship | 3 / 3 (EXECUTION DONE) | 145m | 48.3m |
 
 **Recent Trend:**
+- 04-03 executed: 3 task commits (eb1d8d7, d2ee16d, a119289) + Task 5/6 manual UI work via D-43 fallback. Repo live at https://github.com/nickthx/nfl-defensive-tendencies. CI green; main-protection ruleset active and validated by rejecting a direct push. 2 Rule-1 fixes-forward (CI pandas pin conflict; matplotlib RGBA→RGB resave for social preview). All 4 GitHub state operations (create_repository, branch protection, social preview, visibility flip, profile pin, PR creation) hit MCP 403 — token has no admin scope; ALL handled via UI with paths logged in 04-03-SUMMARY.md. Task 6 incognito non-author verification: ship-approved (7/7 desktop + 3/3 mobile DOM/CSS introspection).
 - 04-01 executed: 4 task commits in 55min. 3 PNGs (hero 1845x2178 portrait, social preview 1280x640, scatter 1600x1600). S3 chi2=33.46 p<0.000001 OR=1.210 contradicts S1. League avg=14.28. 3 Rule-1 deviations (QUERY-07 columns, tight-bbox pixel drift x2). VIZ-01..05 complete.
 - Phase 4 discuss-phase complete. ~50 numbered decisions captured in `.planning/phases/04-story-and-ship/04-CONTEXT.md` across 5 areas: FINDINGS narrative architecture (6 named insights, leaderboard-headlined, S1 + S3 chi-squares as separate insights with explicit pre-registered/exploratory labels, mandatory caveat sentence on every insight), KL-vs-H rank-rank scatter (inverted axes, y=x diagonal, 8 callouts via adjustText), hero chart + social preview (horizontal bar, plain-text codes, highlight-extremes coloring with non-red palette, fixed 0–100 axis, top-12 social preview locked not fallback), public repo surface (`nfl-defensive-tendencies`, MIT, 8 topics including `nflverse`, no CONTRIBUTING/CODE_OF_CONDUCT, branch protection requiring SHIP-01), CI workflow scope (single sequential job: ruff + ETL+analysis import smoke + SHIP-08 grep, push+PR triggers, concurrency cancel-in-progress). Three notable user pushbacks against assistant defaults: inverted scatter axes, fixed 0–100 hero axis, top-12 social preview as locked design. One new analytical deliverable surfaced during discuss: S3 (1st-and-10) PA × blitz exploratory chi-square (N=18,609; N(PA=1)=8,652) appended to `02_predictability_modeling.ipynb` with 5-scenario decision rule + 3-sentence structural shape pre-locked, OR delta vs S1 as first-class output. Pre-discuss factual brief (`04-PRE-DISCUSS-BRIEF.md`) committed before discuss to establish the analytical record on D-14..D-17.
 - Phase 3 closed cleanly. 11 execution commits landed across 3 plans; verifier PASS first iteration with 15/15 must-haves, 17/17 REQ-IDs, 5/5 ROADMAP criteria. Wave 2 ran with both agents on the main working tree (no worktree isolation — Python venv is gitignored on Windows); the brief git index lock was the only concurrency surface and resolved cleanly. The disjoint-file-set decision held: `queries/`+`scripts/` (03-02) vs `analysis/02_*` (03-03) produced no merge conflicts.
