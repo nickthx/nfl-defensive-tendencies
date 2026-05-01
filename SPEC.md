@@ -84,7 +84,7 @@ nfl-coverage-tendencies/                  # local folder; public repo name set i
 ## Business Questions to Answer
 Each becomes a SQL query, Python analysis, or both. Anchored on the four dimensions named in `docs/ftn-schema-audit.md`: `n_blitzers` and `n_pass_rushers` (pressure, on `play_type='pass'`), `is_play_action` (cross-cutting D-07 modifier), and `n_offense_backfield` (personnel, on competitive plays).
 
-1. **Distribution baseline:** What is the league-wide blitz rate (`n_blitzers > 4`) and pass-rusher count (`n_pass_rushers`) distribution on `play_type='pass'`, and how does each team's rate deviate from the league baseline? How does the `n_offense_backfield` distribution shift between 1st-and-10 and 3rd-and-long?
+1. **Distribution baseline:** What is the league-wide blitz rate (`n_blitzers > 0` — any FTN-charted extra rusher above the 4-man base front; D-14 calibration) and pass-rusher count (`n_pass_rushers`) distribution on `play_type='pass'`, and how does each team's rate deviate from the league baseline? How does the `n_offense_backfield` distribution shift between 1st-and-10 and 3rd-and-long?
 2. **Down & distance:** Which teams have the most predictable blitz rate on 3rd-and-long (S1)? On 1st-and-10 (S3)? On 2nd-and-medium (S4)? Predictability is computed against a normalized Shannon entropy over the chosen anchor's support.
 3. **Field zone:** How does `n_pass_rushers` distribution change in the red zone (S2 — `yardline_100 <= 20`) vs midfield, controlling for down and distance? Which teams have the largest red-zone-vs-midfield gap?
 4. **EPA allowed:** Which `n_pass_rushers` count (4-rusher vs 5+-rusher) gives up the most EPA per play league-wide? Per team? Across the 4 pre-registered situations only (firewall per D-05).
