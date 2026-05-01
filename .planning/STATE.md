@@ -5,23 +5,23 @@
 See: .planning/PROJECT.md (updated 2026-04-29)
 
 **Core value:** A recruiter can clone the repo, run a single command, and within 2 minutes understand both the analytical insight and the engineering rigor behind it.
-**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — Phase 4 planned, ready to execute
+**Current focus:** Phase 4 — Story & Ship (Viz + Docs + Public GitHub) — 04-01 complete, ready for 04-02 + 04-03
 
 ## Current Position
 
-Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — READY TO EXECUTE
-Plan: 3/3 plans created (04-01 Visualizations + S3 chi-square / 04-02 FINDINGS + README + 5-site cross-doc reconciliation / 04-03 CI + LICENSE + private-then-public ship). 13 tasks total (4 auto in 04-01 + 3 auto in 04-02 + 4 auto + 2 checkpoint:human-verify in 04-03). Wave 1: 04-01. Wave 2: 04-02 + 04-03 (no `files_modified` overlap; 04-03's public-ship sub-tasks implicitly require 04-02 done via SHIP-08 placeholder grep on README + FINDINGS).
-Status: Phase 4 plans verified. Plan-checker iteration 1 found 3 BLOCKERS + 4 WARNINGS; iteration 2 (revision) closed all 3 blockers + 3 of 4 warnings (D-49 grep scope tightened to user-facing surfaces + code allow-list excluding `.planning/phases/*` audit trail; adjustText runtime version assertion via `packaging.version`; 04-03 frontmatter `autonomous: true` with per-task `gate="blocking"` checkpoints; LICENSE copyright stripped of personal email — uses `nickthx` GitHub handle; SHIP-02 fresh-venv script empirically run with `< 600s` wall-clock assertion; FINDINGS verify includes 6 case-insensitive AI-template phrase greps). Manual re-verification confirmed all 6 fixes in place at expected lines. All 21 phase REQ-IDs (VIZ-01..05, DOC-01..08, SHIP-01..08) covered with zero gaps and zero duplicates.
-Last activity: 2026-04-30 — Phase 4 plan-phase complete. PATTERNS.md (pattern mapper found 3 actionable items: missing adjustText pin; 5th D-48 reconciliation site at `analysis/01_exploratory.py:162`; GitHub MCP fallback path required for SHIP-04 + SHIP-05) + 3 PLAN.md files committed. Phase 4 ready for `/gsd-execute-phase 4`.
+Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — IN PROGRESS
+Plan: 1/3 complete. 04-01 (Visualizations + S3 chi-square) DONE. Wave 2: 04-02 (FINDINGS + README) + 04-03 (CI + ship) can now parallelize.
+Status: 04-01 executed cleanly. 3 PNGs in findings/images/ (hero portrait, 1280x640 social preview, KL-vs-H scatter). S3 exploratory chi-square appended to 02_predictability_modeling.py (OR=1.210, contradicts S1 direction). Both notebooks cleared and run end-to-end. 3 Rule-1 deviations (QUERY-07 column mismatch fixed inline; rc_context savefig.bbox=None for exact pixel dimensions). VIZ-01..05 complete.
+Last activity: 2026-04-30 — 04-01 executed. 4 task commits (bb02935, 8e3c82c, 8746e6e, 76ef3ad). SUMMARY created. League avg = 14.28. S3 chi2=33.46, p<0.000001, OR=1.210, OR delta vs S1=+0.562, direction=contradicts.
 
-Progress: [████████░░] 75%
+Progress: [█████████░] 83%
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 12.9m
-- Total execution time: 90.5m (Phase 1: 35m / Phase 2: 18.5m / Phase 3: 37m)
+- Total plans completed: 8
+- Average duration: 13.2m
+- Total execution time: 145.5m (Phase 1: 35m / Phase 2: 18.5m / Phase 3: 37m / Phase 4: 55m so far)
 
 **By Phase:**
 
@@ -30,10 +30,10 @@ Progress: [████████░░] 75%
 | 1. Foundation & FTN Pivot Calibration | 2 / 2 (COMPLETE) | 35m | 17.5m |
 | 2. Data Layer (ETL + Schema) | 2 / 2 (COMPLETE) | 18.5m | 9.25m |
 | 3. Analytical Layer (SQL + Python) | 3 / 3 (COMPLETE) | 37m | 12.3m |
-| 4. Story & Ship | 0 / 3 (PLANNED) | — | — |
+| 4. Story & Ship | 1 / 3 (IN PROGRESS) | 55m | — |
 
 **Recent Trend:**
-- Phase 4 plan-phase complete. 3 PLAN.md files committed: 04-01 Visualizations + S3 chi-square (4 tasks; VIZ-01..05); 04-02 FINDINGS + README + 5-site cross-doc reconciliation (3 tasks; DOC-01..08); 04-03 CI + LICENSE + private-then-public ship (4 auto + 2 checkpoint:human-verify; SHIP-01..08). Pattern mapper (`04-PATTERNS.md`) found 3 actionable items folded into the plans: missing `adjustText>=1.0,<2` pin (added to 04-01 Task 1 with runtime version assertion); 5th D-48 reconciliation site at `analysis/01_exploratory.py:162` (added to 04-02 sweep alongside the 4 named in CONTEXT); GitHub MCP fallback policy for SHIP-04 social preview + SHIP-05 profile pin (logged path required in 04-03-SUMMARY.md). Plan-checker iteration 1 found 3 BLOCKERS + 4 WARNINGS; revision iteration 2 closed all 3 blockers + 3 warnings (D-49 grep scope tightened to user-facing surfaces + code allow-list, excluding `.planning/phases/*` audit trail; adjustText runtime version enforced via `packaging.version`; 04-03 frontmatter `autonomous: false → true` with per-task `gate="blocking"` checkpoints; LICENSE copyright stripped of personal email, uses `nickthx` GitHub handle; SHIP-02 fresh-venv script empirically run with `< 600s` wall-clock assertion; FINDINGS verify includes 6 case-insensitive AI-template phrase greps with POSIX-portable boundaries). Manual re-verification confirmed all 6 fixes at expected lines. All 21 phase REQ-IDs covered with zero gaps and zero duplicates.
+- 04-01 executed: 4 task commits in 55min. 3 PNGs (hero 1845x2178 portrait, social preview 1280x640, scatter 1600x1600). S3 chi2=33.46 p<0.000001 OR=1.210 contradicts S1. League avg=14.28. 3 Rule-1 deviations (QUERY-07 columns, tight-bbox pixel drift x2). VIZ-01..05 complete.
 - Phase 4 discuss-phase complete. ~50 numbered decisions captured in `.planning/phases/04-story-and-ship/04-CONTEXT.md` across 5 areas: FINDINGS narrative architecture (6 named insights, leaderboard-headlined, S1 + S3 chi-squares as separate insights with explicit pre-registered/exploratory labels, mandatory caveat sentence on every insight), KL-vs-H rank-rank scatter (inverted axes, y=x diagonal, 8 callouts via adjustText), hero chart + social preview (horizontal bar, plain-text codes, highlight-extremes coloring with non-red palette, fixed 0–100 axis, top-12 social preview locked not fallback), public repo surface (`nfl-defensive-tendencies`, MIT, 8 topics including `nflverse`, no CONTRIBUTING/CODE_OF_CONDUCT, branch protection requiring SHIP-01), CI workflow scope (single sequential job: ruff + ETL+analysis import smoke + SHIP-08 grep, push+PR triggers, concurrency cancel-in-progress). Three notable user pushbacks against assistant defaults: inverted scatter axes, fixed 0–100 hero axis, top-12 social preview as locked design. One new analytical deliverable surfaced during discuss: S3 (1st-and-10) PA × blitz exploratory chi-square (N=18,609; N(PA=1)=8,652) appended to `02_predictability_modeling.ipynb` with 5-scenario decision rule + 3-sentence structural shape pre-locked, OR delta vs S1 as first-class output. Pre-discuss factual brief (`04-PRE-DISCUSS-BRIEF.md`) committed before discuss to establish the analytical record on D-14..D-17.
 - Phase 3 closed cleanly. 11 execution commits landed across 3 plans; verifier PASS first iteration with 15/15 must-haves, 17/17 REQ-IDs, 5/5 ROADMAP criteria. Wave 2 ran with both agents on the main working tree (no worktree isolation — Python venv is gitignored on Windows); the brief git index lock was the only concurrency surface and resolved cleanly. The disjoint-file-set decision held: `queries/`+`scripts/` (03-02) vs `analysis/02_*` (03-03) produced no merge conflicts.
 - Phase 3 surfaced 4 substantive findings — see Decisions D-14..D-17. The most consequential is D-14 (n_blitzers threshold correction): both Wave 2 agents independently caught and fixed a misreading of the FTN column semantics during execution, which means the locked CONTEXT.md threshold (`> 4`) and the now-corrected operational threshold (`> 0`) disagree. Phase 4 reconciliation locked: folds into Plan 04-02 README hand-rewrite sweep alongside README-hook S1-vs-cross-situation reconciliation, with a post-sweep repo-wide grep for `n_blitzers > 4` variants logged in the verification report.
@@ -98,5 +98,5 @@ Items acknowledged and carried forward (v2 backlog from REQUIREMENTS.md):
 ## Session Continuity
 
 Last session: 2026-04-30
-Stopped at: Phase 4 PLANNED. 3 PLAN.md files committed (`04-01-PLAN.md` 4 tasks VIZ-01..05; `04-02-PLAN.md` 3 tasks DOC-01..08; `04-03-PLAN.md` 4 auto + 2 checkpoint tasks SHIP-01..08). PATTERNS.md (`04-PATTERNS.md`) flagged 3 actionable items folded into plans (adjustText pin, 5th reconciliation site at `analysis/01_exploratory.py:162`, MCP fallback for SHIP-04/05). Plan-checker iteration 1 returned 3 BLOCKERS + 4 WARNINGS; revision iteration 2 closed all 3 blockers + 3 of 4 warnings (#4, #5, #7); warning #6 (Task 1 of 04-02 has high editorial scope) skipped per checker's "no change is mandatory" note. Manual re-verification confirmed all 6 fixes in place. All 21 phase REQ-IDs covered with zero gaps and zero duplicates. Wave 1: 04-01 (autonomous). Wave 2: 04-02 (autonomous) + 04-03 (autonomous frontmatter; per-task `gate="blocking"` on Tasks 4 + 6 — visibility flip eyeball pass + SHIP-07 incognito desktop+mobile non-author verification).
-Resume file: `.planning/phases/04-story-and-ship/04-01-PLAN.md` (and 04-02 + 04-03). Run `/gsd-execute-phase 4` to execute. Wave 2 plans (04-02 + 04-03) share no `files_modified` overlap so they can run in parallel after 04-01 lands; 04-03's public-ship sub-tasks implicitly require 04-02 done via the SHIP-08 placeholder grep on README.md + findings/FINDINGS.md (CI workflow step would fail if either still has placeholders).
+Stopped at: 04-01 COMPLETE. 4 task commits (bb02935, 8e3c82c, 8746e6e, 76ef3ad) + docs commit. SUMMARY at `.planning/phases/04-story-and-ship/04-01-SUMMARY.md`. VIZ-01..05 satisfied. 3 PNGs in findings/images/. S3 cells in 02_predictability_modeling.py. Both notebooks cleared and run end-to-end.
+Resume file: `.planning/phases/04-story-and-ship/04-02-PLAN.md` and `04-03-PLAN.md`. Wave 2: 04-02 (FINDINGS + README) + 04-03 (CI + ship skeleton) can run in parallel — no files_modified overlap. 04-03 public-ship sub-tasks require 04-02 done first (SHIP-08 placeholder grep would fail on unfinished README/FINDINGS).

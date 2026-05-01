@@ -110,7 +110,7 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Visualizations + S3 exploratory chi-square (VIZ-01..05) — `analysis/03_visualizations.ipynb` exports hero PNG (`findings/images/01_predictability_ranking.png`, portrait 8x11, fixed 0-100 axis), KL-vs-H rank-rank scatter (`findings/images/02_kl_vs_h_scatter.png`, inverted axes, 8 callouts via adjustText), top-12 social-preview source (`findings/images/01_predictability_ranking_top12.png`, 1280x640); appends S3 PA × blitz exploratory chi-square cells to `analysis/02_predictability_modeling.py` with OR-delta-vs-S1 first-class output; pins `adjustText` in requirements.txt
+- [x] 04-01-PLAN.md — Visualizations + S3 exploratory chi-square (VIZ-01..05) — `analysis/03_visualizations.ipynb` exports hero PNG (`findings/images/01_predictability_ranking.png`, portrait 8x11, fixed 0-100 axis), KL-vs-H rank-rank scatter (`findings/images/02_kl_vs_h_scatter.png`, inverted axes, 8 callouts via adjustText), top-12 social-preview source (`findings/images/01_predictability_ranking_top12.png`, 1280x640); appends S3 PA × blitz exploratory chi-square cells to `analysis/02_predictability_modeling.py` with OR-delta-vs-S1 first-class output; pins `adjustText` in requirements.txt (completed 2026-04-30)
 - [ ] 04-02-PLAN.md — Documentation + cross-doc reconciliation (DOC-01..08) — `findings/FINDINGS.md` memo (TL;DR + 6 named insights + 3 thematic methodology blocks + 4 appendix tables + 5-item Limitations + attribution); README hand-rewrite (hero PNG above the fold, Mermaid data-flow diagram, 5-command setup, 6-term glossary, attribution, Known Issues); `data/README.md` extension; D-48 5-site `n_blitzers > 0` reconciliation sweep (PROJECT.md L58 / 03-CONTEXT.md D-02 / docs/ftn-schema-audit.md / README glossary / analysis/01_exploratory.py L163) with D-49 post-sweep grep verification
 - [ ] 04-03-PLAN.md — CI workflow + ship sequence (SHIP-01..08) — `.github/workflows/ci.yml` (single job: ruff + import smoke + SHIP-08 placeholder regex; push+PR triggers; concurrency cancel-in-progress); fresh-venv reproducibility scripts (POSIX + Windows); `LICENSE` (MIT); private-then-public GitHub MCP ship flow with branch protection on main gated on `lint-and-import-smoke`; social preview + profile pin (MCP-or-UI fallback path logged); commit-history audit (SHIP-06); incognito desktop + mobile non-author verification (SHIP-07, D-42)
 
@@ -129,7 +129,7 @@ Phases execute in numeric order: 1 → 2 → 3 → 4. Decimal phases inserted on
 | 1. Foundation & FTN Pivot Calibration | 2/2 | Complete | 2026-04-29 |
 | 2. Data Layer (ETL + SQLite Schema) | 2/2 | Complete | 2026-04-29 |
 | 3. Analytical Layer (SQL + Python) | 3/3 | Complete | 2026-04-30 |
-| 4. Story & Ship (Viz + Docs + Public GitHub) | 0/3 | Planned | - |
+| 4. Story & Ship (Viz + Docs + Public GitHub) | 1/3 | In Progress | - |
 
 ---
 
