@@ -12,7 +12,7 @@ See: .planning/PROJECT.md (updated 2026-04-29)
 Phase: 4 of 4 (Story & Ship — Viz + Docs + Public GitHub) — COMPLETE
 Plan: 3/3 complete. 04-01 (Viz + S3) DONE. 04-02 (FINDINGS + README + D-48/D-49) DONE. 04-03 (CI + LICENSE + private-then-public ship) DONE.
 Status: Public repo live at https://github.com/nickthx/nfl-defensive-tendencies. v1 milestone shipped. Verifier: PASSED on re-verification (16/16 must-haves, 21/21 REQ-IDs, 6/6 ROADMAP criteria). Initial verifier pass scored gaps_found (14/16) for two D-49-spirit gaps NOT in the plan-locked allow-list: SPEC.md L87 + analysis/02_predictability_modeling.ipynb cells 0+11 carrying stale 'n_blitzers > 4'. Both closed in commit 7c3a0f1. Final D-49 grep extended to include SPEC.md returns zero matches across all 11 file patterns.
-Last activity: 2026-05-01 — Phase 4 closed. 4 task commits + 1 ship summary + 1 gap closure: eb1d8d7 (CI+LICENSE+__init__), d2ee16d (fresh-venv scripts), a119289 (CI two-step nfl_data_py --no-deps fix), a05353e (04-03 SUMMARY+STATE+ROADMAP), 7c3a0f1 (D-49 gap closure: SPEC.md + .ipynb resync). VERIFICATION.md status: passed.
+Last activity: 2026-05-02 — Completed quick task 260502-g4w: Fix league-avg label overlap on hero PNG (set_ylim headroom band in render_leaderboard + jupytext sync + PNG regen; commits 93e6952, 4eef3ff, d6c17eb, merge 86d53cb).
 
 Progress: [██████████] 100% — v1 shipped
 
@@ -81,6 +81,13 @@ None yet.
 ### Blockers/Concerns
 
 None yet.
+
+### Quick Tasks Completed
+
+| # | Description | Date | Commit | Directory |
+|---|-------------|------|--------|-----------|
+| 260502-ftr | Fix header/title spacing on `01_predictability_ranking.png` — reorder so headline renders above subhead; regenerate hero + social-preview PNGs | 2026-05-02 | 9551dab | [260502-ftr-fix-header-title-spacing-on-findings-ima](./quick/260502-ftr-fix-header-title-spacing-on-findings-ima/) |
+| 260502-g4w | Fix `League avg` label overlap on `01_predictability_ranking.png` — extend y-axis headroom band so the label sits above the PHI top bar; regenerate hero + social-preview PNGs | 2026-05-02 | d6c17eb | [260502-g4w-fix-league-avg-label-spacing-on-findings](./quick/260502-g4w-fix-league-avg-label-spacing-on-findings/) |
 
 ## Deferred Items
 

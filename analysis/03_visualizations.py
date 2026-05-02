@@ -91,13 +91,10 @@ with get_conn() as conn:
 # Aggregate across seasons within (team, situation) so the cell matrix is 32 x 4,
 # not 32 x 4 x 4 — mirrors 02_predictability_modeling.py lines 145-153.
 K_SUPPORT = 2  # blitz/no-blitz binary
-team_sit = (
-    raw.groupby(["defteam", "situation_id"], as_index=False)
-       .agg(
-           blitz_count=("blitz_count", "sum"),
-           no_blitz_count=("no_blitz_count", "sum"),
-           total_pass_plays=("total_pass_plays", "sum"),
-       )
+team_sit = raw.groupby(["defteam", "situation_id"], as_index=False).agg(
+    blitz_count=("blitz_count", "sum"),
+    no_blitz_count=("no_blitz_count", "sum"),
+    total_pass_plays=("total_pass_plays", "sum"),
 )
 team_sit["n"] = team_sit["total_pass_plays"]
 
@@ -143,6 +140,7 @@ print(f"League average predictability index: {league_avg:.2f}")
 # deliberately non-red per D-28), middle 26 in palette index 7 (gray).
 # League-average vertical dashed line; 1-decimal annotations on top-3 + bottom-3 only.
 
+
 # %%
 def render_leaderboard(
     df: pd.DataFrame,
@@ -158,9 +156,9 @@ def render_leaderboard(
     # already encodes the target at 200 DPI; tight-layout is skipped in this mode
     # to avoid the tight-bbox trim that shifts pixel counts.
     palette = sns.color_palette("colorblind")
-    top_color = palette[0]      # blue   #0173b2
-    bottom_color = palette[1]   # orange #de8f05  (NON-RED per D-28)
-    neutral = palette[7]        # gray   #949494
+    top_color = palette[0]  # blue   #0173b2
+    bottom_color = palette[1]  # orange #de8f05  (NON-RED per D-28)
+    neutral = palette[7]  # gray   #949494
 
     view = df.head(top_n).copy()
     n = len(view)
@@ -184,20 +182,32 @@ def render_leaderboard(
     ax.set_yticklabels(view["defteam"].values, fontsize=9)
     ax.set_xlim(0, 100)  # FIXED 0-100 per D-30
     ax.set_xlabel("Predictability index (0-100; higher = more predictable)")
-    ax.set_title(title, fontsize=13, loc="left")
-    # Subtitle as a text below the title.
+    # Headline (large) — pad in points keeps spacing stable across both figsizes
+    ax.set_title(title, fontsize=14, loc="left", pad=22)
+    # Subhead (small, gray) sits just above the axes top, below the headline
     ax.text(
-        0.0, 1.02, subtitle,
-        transform=ax.transAxes, fontsize=10, color="#444444", va="bottom",
+        0.0,
+        1.0,
+        subtitle,
+        transform=ax.transAxes,
+        fontsize=10,
+        color="#444444",
+        va="bottom",
+        ha="left",
     )
 
-    # League-average dashed vertical line + label placed at upper-right corner
-    # away from top-ranked bars per D-29.
+    # League-average dashed vertical line + label.
+    # Reserve a 1-unit headroom band above the top bar so the label sits in
+    # clear space adjacent to the line (was overlapping the PHI bar pre-fix).
+    ax.set_ylim(-0.6, n + 0.5)
     ax.axvline(league_avg, linestyle="--", color="#666666", linewidth=1.0)
     ax.text(
-        league_avg + 1.5, n - 0.5,
+        league_avg + 1.5,
+        n,
         f"League avg = {league_avg:.1f}",
-        fontsize=9, color="#444444", va="top",
+        fontsize=9,
+        color="#444444",
+        va="center",
     )
 
     # 1-decimal annotations on top-3 + bottom-3 only per D-31.
@@ -206,9 +216,11 @@ def render_leaderboard(
     for i in annotate_indices:
         score = view["pred_score"].iloc[i]
         ax.text(
-            score + 1.0, y_positions[i],
+            score + 1.0,
+            y_positions[i],
             f"{score:.1f}",
-            fontsize=9, va="center",
+            fontsize=9,
+            va="center",
         )
 
     if exact_pixels is not None:
@@ -234,18 +246,24 @@ HERO_SUBTITLE = (
     "0-100 predictability index, higher = more predictable."
 )
 render_leaderboard(
-    leaderboard, top_n=32, figsize=(8, 11),
+    leaderboard,
+    top_n=32,
+    figsize=(8, 11),
     savepath=IMAGES_DIR / "01_predictability_ranking.png",
-    title=HERO_TITLE, subtitle=HERO_SUBTITLE,
+    title=HERO_TITLE,
+    subtitle=HERO_SUBTITLE,
 )
 
 # %%
 SOCIAL_TITLE = "Some NFL Defenses Are More Predictable Than Others (Top 12)"
 SOCIAL_SUBTITLE = "Most Predictable Defenses 2022-2025."
 render_leaderboard(
-    leaderboard, top_n=12, figsize=(6.4, 3.2),
+    leaderboard,
+    top_n=12,
+    figsize=(6.4, 3.2),
     savepath=IMAGES_DIR / "01_predictability_ranking_top12.png",
-    title=SOCIAL_TITLE, subtitle=SOCIAL_SUBTITLE,
+    title=SOCIAL_TITLE,
+    subtitle=SOCIAL_SUBTITLE,
     exact_pixels=(1280, 640),
 )
 
@@ -264,9 +282,7 @@ render_leaderboard(
 # Reuse the leaderboard prepared above for H/log(2) ranks; recompute KL ranks.
 # KL universe: per-team blitz rate from competitive_plays JOIN ftn_play, against
 # the league baseline. Read QUERY-01 raw inputs to get per-team rates.
-SQL_TEAM_BLITZ = (QUERIES_DIR / "01_tendency_distribution_by_team.sql").read_text(
-    encoding="utf-8"
-)
+SQL_TEAM_BLITZ = (QUERIES_DIR / "01_tendency_distribution_by_team.sql").read_text(encoding="utf-8")
 with get_conn() as conn:
     team_blitz = pd.read_sql_query(SQL_TEAM_BLITZ, conn)
 # team_blitz has columns: defteam, blitz_rate (or equivalent league-baseline
@@ -288,9 +304,7 @@ def kl_binary(p: float, q: float) -> float:
     return p * np.log(p / q) + (1 - p) * np.log((1 - p) / (1 - q))
 
 
-team_blitz["kl"] = team_blitz["blitz_rate"].apply(
-    lambda p: kl_binary(p, league_blitz_rate)
-)
+team_blitz["kl"] = team_blitz["blitz_rate"].apply(lambda p: kl_binary(p, league_blitz_rate))
 
 # Build rank columns: rank 1 = most predictable on H, most extreme on KL.
 h_ranks = leaderboard.copy()
@@ -315,8 +329,13 @@ point_color = palette[0]
 diag_color = "#888888"
 
 ax.scatter(
-    ranks["rank_H"], ranks["rank_KL"],
-    s=42, color=point_color, edgecolor="white", linewidth=0.6, zorder=3,
+    ranks["rank_H"],
+    ranks["rank_KL"],
+    s=42,
+    color=point_color,
+    edgecolor="white",
+    linewidth=0.6,
+    zorder=3,
 )
 # Inverted axes: rank 1 at top-left of both axes per D-22.
 ax.set_xlim(33, 0)
@@ -327,16 +346,26 @@ ax.set_ylabel("Rank by KL-from-league-baseline  (1 = most extreme deviation)")
 # y=x diagonal labeled per D-23.
 ax.plot([0, 33], [0, 33], linestyle="--", color=diag_color, linewidth=1.0, zorder=1)
 ax.text(
-    32, 32, "perfect agreement (rho = 1.0)",
-    fontsize=9, color="#555555", ha="left", va="bottom", rotation=45,
+    32,
+    32,
+    "perfect agreement (rho = 1.0)",
+    fontsize=9,
+    color="#555555",
+    ha="left",
+    va="bottom",
+    rotation=45,
 )
 
 ax.set_title("Two Definitions of Predictable Disagree", fontsize=13, loc="left")
 ax.text(
-    0.0, 1.02,
+    0.0,
+    1.02,
     "Spearman rho = -0.111 between H/log(2) and KL-from-league-baseline rankings; "
     "32 NFL defenses, 2022-2025.",
-    transform=ax.transAxes, fontsize=10, color="#444444", va="bottom",
+    transform=ax.transAxes,
+    fontsize=10,
+    color="#444444",
+    va="bottom",
 )
 
 # 8 callouts per D-24: top-5 disagreers + 3 leaderboard anchors.
@@ -353,7 +382,8 @@ for team in callout_teams:
 
 # adjust_text places labels with collision avoidance per D-24.
 adjust_text(
-    text_objs, ax=ax,
+    text_objs,
+    ax=ax,
     arrowprops=dict(arrowstyle="-", color="#666666", lw=0.6),
     only_move={"text": "xy"},
 )
