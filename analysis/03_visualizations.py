@@ -196,16 +196,18 @@ def render_leaderboard(
         ha="left",
     )
 
-    # League-average dashed vertical line + label placed at upper-right corner
-    # away from top-ranked bars per D-29.
+    # League-average dashed vertical line + label.
+    # Reserve a 1-unit headroom band above the top bar so the label sits in
+    # clear space adjacent to the line (was overlapping the PHI bar pre-fix).
+    ax.set_ylim(-0.6, n + 0.5)
     ax.axvline(league_avg, linestyle="--", color="#666666", linewidth=1.0)
     ax.text(
         league_avg + 1.5,
-        n - 0.5,
+        n,
         f"League avg = {league_avg:.1f}",
         fontsize=9,
         color="#444444",
-        va="top",
+        va="center",
     )
 
     # 1-decimal annotations on top-3 + bottom-3 only per D-31.
